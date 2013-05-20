@@ -28,7 +28,6 @@ public class Millitta extends Player {
     public void play() {
         int[] board = getBoard();
 
-        setMessage(String.valueOf(color));
 
     }
 

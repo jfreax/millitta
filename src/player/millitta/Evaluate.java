@@ -36,8 +36,12 @@ public class Evaluate {
         263172, // 1, 9, 17
         1052688, // 3, 11, 19
         4210752, // 5, 13, 21
-        16843008, // 7, 15, 23
+        16843008 // 7, 15, 23
     };
+
+    long boardState_ = 0L;
+    /* board state for only the player to evaluate */
+    long playersBoard_ = 0L;
 
     /*
         0 = Player ID to evaluate
@@ -47,28 +51,46 @@ public class Evaluate {
     */
     public Evaluate(long boardState)
     {
+        this.boardState_ = boardState;
 
-
+        if ( (boardState_ & 1) == 1 ) {
+            playersBoard_ = boardState_ >> 24;
+        }
     }
 
     public double getFitness()
     {
+        double fitness = 0.f;
 
-        return 0.0f;
+        fitness += Weighting[0] * getOpenMills();
+        fitness += Weighting[1] * getClosedMills();
+
+        return fitness;
     }
 
-    private int getClosedMills()
+    public int getClosedMills()
     {
-        int mills = 0;
+        int closedMills = 0;
 
+        for( int mill : mills ) {
+            if( Long.bitCount( playersBoard_ & mill ) == 3 ) {
+                closedMills++;
+            }
+        }
 
-        return mills;
+        return closedMills;
     }
 
     private int getOpenMills()
     {
-        int mills = 0;
+        int openMills = 0;
 
-        return mills;
+        for( int mill : mills ) {
+            if( Long.bitCount( playersBoard_ & mill ) == 2 ) {
+                openMills++;
+            }
+        }
+
+        return openMills;
     }
 }
