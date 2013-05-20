@@ -22,16 +22,21 @@ public class Millitta extends Player {
         6 ----------- 5 ----------- 4
      */
     public Millitta() {
-        color = getMyColor();
-        rest = countMyRest();
+        super();
     }
 
     public void play() {
         int[] board = getBoard();
 
+        setMessage(String.valueOf(color));
+
     }
 
     public String getAuthor() {
+        /* Initialize here,  because, yeah, fuck me */
+        color = getMyColor();
+        rest = countMyRest();
+
         return "Jens Dieskau";
     }
 
