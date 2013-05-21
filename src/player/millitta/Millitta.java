@@ -26,9 +26,21 @@ public class Millitta extends Player {
     }
 
     public void play() {
-        int[] board = getBoard();
+        long board = getBoardLong();
 
+        Evaluate eval = new Evaluate(board);
 
+        setMessage(String.valueOf(board));
+
+        setMessage("Fitness: "+ eval.getFitness());
+
+        for( int i = 0; i < 24; i++) {
+            //setMessage("& "+ (board & (1<<i)));
+            if( ((board & (1<<i)) + (board & (1<<i+24))) == 0 ) {
+                setMan(i);
+                return;
+            }
+        }
     }
 
     public String getAuthor() {
@@ -37,6 +49,32 @@ public class Millitta extends Player {
         rest = countMyRest();
 
         return "Jens Dieskau";
+    }
+
+    private long getBoardLong()
+    {
+        long board = 0L;
+        int[] boardArray = getBoard();
+
+        if( getMyColor() == BLACK ) {
+            board = 1L << Constants.BIT_PLAYER;
+        }
+
+        for( int i = 0; i < 24; ++i ) {
+            //setMessage("Board " + i + " = " + boardArray[i] );
+            switch (boardArray[i]) {
+                case BLACK:
+                    board |= 1 << 24+i;
+                    break;
+                case WHITE:
+                    board |= 1 << i;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        return board;
     }
 
 }

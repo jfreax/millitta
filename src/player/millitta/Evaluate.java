@@ -1,6 +1,7 @@
 package player.millitta;
 
-public class Evaluate {
+
+public class Evaluate implements Constants {
     public static double[] Weighting = {
         1.0, // open mills
         3.0, // closed mills
@@ -15,28 +16,28 @@ public class Evaluate {
     /*
         Masks for all 16 mills.
         Bits 1-24 are board position.
-        Bits 0 and 25-31 are unused
+        Bits 24-31 are unused
      */
     private final static int mills[] = {
-        14, // 0, 1, 2
-        56, // 2, 3, 4
-        224, // 4, 5, 6
-        386, // 6, 7, 0
+        7, // 0, 1, 2
+        28, // 2, 3, 4
+        112, // 4, 5, 6
+        193, // 6, 7, 0
 
-        3584, // 8, 9, 10
-        14336, // 10, 11, 12
-        57344, // 12, 13, 14
-        98816, // 14, 15, 8
+        1792, // 8, 9, 10
+        7168, // 10, 11, 12
+        28672, // 12, 13, 14
+        49408, // 14, 15, 8
 
-        917504, // 16, 17, 18
-        3670016, // 18, 19, 20
-        14680064, // 20, 21, 22
-        25296896, // 22, 23, 16
+        459752, // 16, 17, 18
+        1835008, // 18, 19, 20
+        7340032, // 20, 21, 22
+        12648448, // 22, 23, 16
 
-        263172, // 1, 9, 17
-        1052688, // 3, 11, 19
-        4210752, // 5, 13, 21
-        16843008 // 7, 15, 23
+        131586, // 1, 9, 17
+        526344, // 3, 11, 19
+        2105376, // 5, 13, 21
+        8421504 // 7, 15, 23
     };
 
     long boardState_ = 0L;
@@ -44,16 +45,16 @@ public class Evaluate {
     long playersBoard_ = 0L;
 
     /*
-        0 = Player ID to evaluate
-         1-24 = Mens of White Player (0)
-        25-48 = Mens of Black Player (1)
+         0-22 = Mens of White Player (0)
+        24-47 = Mens of Black Player (1)
+           48 = Player ID to evaluate
         49-51 = Game phase
     */
     public Evaluate(long boardState)
     {
-        this.boardState_ = boardState;
+        this.boardState_ = playersBoard_ = boardState;
 
-        if ( (boardState_ & 1) == 1 ) {
+        if ( (boardState_ & (1L<<48)) == 1 ) {
             playersBoard_ = boardState_ >> 24;
         }
     }
@@ -62,12 +63,22 @@ public class Evaluate {
     {
         double fitness = 0.f;
 
-        fitness += Weighting[0] * getOpenMills();
-        fitness += Weighting[1] * getClosedMills();
+        fitness += Weighting[WEIGHT_OPEN_MILL] * getOpenMills();
+        fitness += Weighting[WEIGHT_CLOSED_MILL] * getClosedMills();
 
         return fitness;
     }
 
+    /*
+        Es existieren insgesamt 16 mögliche Mühlen.
+        Für jede Mühle wird eine 24 Bit-Maske angelegt und die entsprechenden Bits gemäß des Spielfeldes gesetzt.
+        Auf diese Masken kann dann eine logische UND-Verknüpfung mit den Bits der gesetzten Steine
+        des entsprechenden Spielers angewandt werden.
+
+        Sind bei einer Maske noch 3 Bits gesetzt, so hat der Spieler dort eine geschlossene Mühle.
+        Durch Abzählen, bei wievielen der 16 Masken dies vorkommt,
+        weiß man wieviele Mühlen der Spieler insgesamt hat.
+     */
     public int getClosedMills()
     {
         int closedMills = 0;
@@ -81,10 +92,21 @@ public class Evaluate {
         return closedMills;
     }
 
+    /*
+        Genau wie beim Erkennen der geschlossenen Mühlen werden hier die Steine des Spielers mit allen 16 Masken
+        logisch mit UND-Verknüpft. Eine offene Mühle liegt genau dann vor,
+        wenn 2 Bits in einer verknüpften Maske noch gesetzt sind.
+
+        Solange der auszuwertende Spieler noch Steine zum Setzen hat oder springen kann,
+        reicht diese Bedingung schon aus. Ansonsten muss geprüft werden, ob ein angrenzedes Feld zu dem Feld,
+        in dem der Stein zur fertigen Mühle fehlt, auch ein Stein des selben Spielers liegt.
+        Dieser Stein darf dann natürlich nicht selber schon Teil der gerade betrachteten offenen Mühle sein.
+     */
     private int getOpenMills()
     {
         int openMills = 0;
 
+        // TODO !
         for( int mill : mills ) {
             if( Long.bitCount( playersBoard_ & mill ) == 2 ) {
                 openMills++;
