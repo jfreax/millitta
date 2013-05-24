@@ -28,7 +28,7 @@ public class Evaluate implements Constants {
             2105376, // 5, 13, 21
             8421504 // 7, 15, 23
     };
-    public static double[] Weighting = {
+    private static double[] Weighting = {
             1.0, // open mills
             3.0, // closed mills
             5.0, // Zwickmuehle
@@ -38,7 +38,7 @@ public class Evaluate implements Constants {
             1.5, // moveable
             1.0  // Kreuzungen
     };
-    long boardState_ = 0L;
+    private long boardState_ = 0L;
     /* board state for only the player to evaluate */
     long playersBoard_ = 0L;
     private long boardWithoutMills = -1L;
