@@ -31,14 +31,13 @@ public class Millitta extends Player implements Constants {
         Evaluate eval = new Evaluate(board);
 
 
-
         setMessage(String.valueOf(board));
 
-        setMessage("Fitness: "+ eval.getFitness());
+        setMessage("Fitness: " + eval.getFitness());
 
-        for( int i = 0; i < 24; i++) {
+        for (int i = 0; i < 24; i++) {
             //setMessage("& "+ (board & (1<<i)));
-            if( ((board & (1<<i)) + (board & (1<<i+24))) == 0 ) {
+            if (((board & (1 << i)) + (board & (1 << i + 24))) == 0) {
                 setMan(i);
                 return;
             }
@@ -53,19 +52,18 @@ public class Millitta extends Player implements Constants {
         return "Jens Dieskau";
     }
 
-    private long getBoardLong()
-    {
+    private long getBoardLong() {
         long board = 0L;
         int[] boardArray = getBoard();
 
-        if( getMyColor() == BLACK ) {
+        if (getMyColor() == BLACK) {
             board = 1L << BIT_PLAYER;
         }
 
-        for( int i = 0; i < 24; ++i ) {
+        for (int i = 0; i < 24; ++i) {
             switch (boardArray[i]) {
                 case BLACK:
-                    board |= 1 << 24+i;
+                    board |= 1 << 24 + i;
                     break;
                 case WHITE:
                     board |= 1 << i;
@@ -75,17 +73,17 @@ public class Millitta extends Player implements Constants {
             }
         }
 
-        switch (getAction()){
+        switch (getAction()) {
             case SET_MAN:
                 board |= 1L << BIT_GAMEPHASE;
                 break;
             case MOVE_MAN:
-                if( getMyColor() == WHITE ) {
-                    board |= 1L << BIT_GAMEPHASE+1;
+                if (getMyColor() == WHITE) {
+                    board |= 1L << BIT_GAMEPHASE + 1;
                 }
                 break;
             case REMOVE_MAN:
-                board |= (1L << BIT_GAMEPHASE) | (1L << (BIT_GAMEPHASE+1));
+                board |= (1L << BIT_GAMEPHASE) | (1L << (BIT_GAMEPHASE + 1));
                 // TODO ziehen (0) oder nehmen(1)? BIT_(GAMEPHASE+2)
                 break;
             default:
