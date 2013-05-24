@@ -29,7 +29,7 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants {
 
         Long boardComputedL = transpositionTable.get(board);
         if (boardComputedL != null) {
-            long boardComputed = boardComputedL.longValue();
+            long boardComputed = boardComputedL;
             int boardValue = (int) (boardComputed & 2147483647); // (2^31)-1 aka first 31 bit
 
             if ((boardComputed & (1L << BIT_HAS_CUT)) != 0) {

@@ -3,8 +3,8 @@ package player.millitta;
 import algds.Player;
 
 public class Millitta extends Player implements Constants {
-    public int color;
-    public int rest;
+    private int color;
+    private int rest;
 
     /*
         0 ----------- 1 ----------- 2
@@ -21,7 +21,7 @@ public class Millitta extends Player implements Constants {
         |             |             |
         6 ----------- 5 ----------- 4
      */
-    public Millitta() {
+    protected Millitta() {
         super();
     }
 
