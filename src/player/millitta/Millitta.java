@@ -2,7 +2,7 @@ package player.millitta;
 
 import algds.Player;
 
-public class Millitta extends Player {
+public class Millitta extends Player implements Constants {
     public int color;
     public int rest;
 
@@ -29,6 +29,8 @@ public class Millitta extends Player {
         long board = getBoardLong();
 
         Evaluate eval = new Evaluate(board);
+
+
 
         setMessage(String.valueOf(board));
 
@@ -57,11 +59,10 @@ public class Millitta extends Player {
         int[] boardArray = getBoard();
 
         if( getMyColor() == BLACK ) {
-            board = 1L << Constants.BIT_PLAYER;
+            board = 1L << BIT_PLAYER;
         }
 
         for( int i = 0; i < 24; ++i ) {
-            //setMessage("Board " + i + " = " + boardArray[i] );
             switch (boardArray[i]) {
                 case BLACK:
                     board |= 1 << 24+i;
@@ -72,6 +73,22 @@ public class Millitta extends Player {
                 default:
                     break;
             }
+        }
+
+        switch (getAction()){
+            case SET_MAN:
+                board |= 1L << BIT_GAMEPHASE;
+                break;
+            case MOVE_MAN:
+                if( getMyColor() == WHITE ) {
+                    board |= 1L << BIT_GAMEPHASE+1;
+                }
+                break;
+            case REMOVE_MAN:
+                board |= (1L << BIT_GAMEPHASE) | (1L << (BIT_GAMEPHASE+1));
+                // TODO ziehen (0) oder nehmen(1)? BIT_(GAMEPHASE+2)
+                break;
+            default:
         }
 
         return board;

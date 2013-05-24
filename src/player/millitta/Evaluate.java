@@ -44,6 +44,8 @@ public class Evaluate implements Constants {
     /* board state for only the player to evaluate */
     long playersBoard_ = 0L;
 
+    private long boardWithoutMills = -1L;
+
     /*
          0-22 = Mens of White Player (0)
         24-47 = Mens of Black Player (1)
@@ -54,8 +56,9 @@ public class Evaluate implements Constants {
     {
         this.boardState_ = playersBoard_ = boardState;
 
-        if ( (boardState_ & (1L<<48)) == 1 ) {
-            playersBoard_ = boardState_ >> 24;
+        if ( (boardState_ & (1L<<48L)) != 0 ) {
+            playersBoard_ = boardState_ & ~(long)(Math.pow(2,24)-1); // Alles bis Bit 24 löschen
+            playersBoard_ &= (long)(Math.pow(2,48)-1) << 24; // Player 1 Daten auf Player 0 Datenposition verschieben
         }
     }
 
@@ -82,10 +85,12 @@ public class Evaluate implements Constants {
     public int getClosedMills()
     {
         int closedMills = 0;
+        boardWithoutMills = playersBoard_;
 
         for( int mill : mills ) {
             if( Long.bitCount( playersBoard_ & mill ) == 3 ) {
                 closedMills++;
+                boardWithoutMills &= ~( mill );
             }
         }
 
@@ -105,14 +110,74 @@ public class Evaluate implements Constants {
     private int getOpenMills()
     {
         int openMills = 0;
+        final long mask_move_phase = 4L << BIT_GAMEPHASE; // 0b100
 
-        // TODO !
+        calcBoardWithoutMills();
+
         for( int mill : mills ) {
             if( Long.bitCount( playersBoard_ & mill ) == 2 ) {
-                openMills++;
+                if( (playersBoard_ ^ mask_move_phase) == 0 ) { // Zugphase
+                    openMills++;
+                } else { // Angrenzend bewegbarer Stein, der nicht in einer Mühle ist
+                    long holePos = Math.round(Math.log(playersBoard_ ^ mill) / LOG2);
+                    long boardWithoutOpenAndClosedMills = boardWithoutMills & ~( mill );
+
+                    long nextPos = holePos+1;
+                    long prevPos = holePos-1;
+                    if( nextPos % 8 == 0 ) { // "Überlauf"
+                        nextPos -= 8;
+                    } else if( prevPos == -1 || prevPos % 8 == 7 ) {
+                        prevPos += 8;
+                    }
+
+                    // Davor oder danach liegt noch ein Stein der weder in einer geschlossenen
+                    // Mühle, noch in genau der offenen die wir uns gerade angucken, liegt.
+                    if( (boardWithoutOpenAndClosedMills & ((1L << prevPos) | (1L << nextPos))) != 0 ) {
+                        openMills++;
+                        continue; // mehr anliegende Steine brauchen wir uns hier nicht anschauen
+                    }
+                    if( holePos % 2 == 1 ) { // Fehlender Steine in einer Kreuzung Ecke
+                        nextPos = holePos + 8;
+                        if( nextPos < 24 ) {
+                            if( (boardWithoutOpenAndClosedMills & (1L << nextPos)) != 0 ) {
+                                openMills++;
+                                continue;
+                            }
+                        }
+                        prevPos = prevPos - 8;
+                        if( prevPos > 0 ) {
+                            if( (boardWithoutOpenAndClosedMills & (1L << prevPos)) != 0 ) {
+                                openMills++;
+                                // continue; // Nicht notwendig
+                            }
+                        }
+                    }
+                }
             }
         }
 
         return openMills;
     }
+
+    /*
+        Erweiterung des Algorithmus zum erkennen von offenen Mühlen.
+        Hier muss nur der angrenzende Stein selbst schon in einer Mühle sein.
+     */
+    private int getDoubleMills()
+    {
+        int doubleMills = 0;
+
+
+        return doubleMills;
+    }
+
+    private void calcBoardWithoutMills()
+    {
+        if( boardWithoutMills == -1 ) {
+            getClosedMills();
+        }
+    }
+
+
+
 }
