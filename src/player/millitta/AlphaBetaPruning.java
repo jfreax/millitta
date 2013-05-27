@@ -9,8 +9,8 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants {
     private int maxDepth;
     private long endTime;
 
-    private int currentBestMoveValue = -999; // TODO -infinity
-    private long currentBestMove = -1;
+    private int currentBestMoveValue = Integer.MIN_VALUE; // -Infinity
+    private long currentBestMove = -1; // TODO
 
 
     public AlphaBetaPruning(long boardState, int maxDepth, int maxTime) {
