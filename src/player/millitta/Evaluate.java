@@ -52,7 +52,7 @@ public class Evaluate implements Constants {
     public Evaluate(long boardState) {
         this.boardState_ = playersBoard_ = boardState;
 
-        if ((boardState_ & (1L << 48L)) != 0) {
+        if ((boardState_ & (1L << BIT_PLAYER)) != 0) {
             playersBoard_ = boardState_ & ~(long) (Math.pow(2, 24) - 1); // Alles bis Bit 24 löschen
             playersBoard_ &= (long) (Math.pow(2, 48) - 1) << 24; // Player 1 Daten auf Player 0 Datenposition verschieben
         }
@@ -123,7 +123,7 @@ public class Evaluate implements Constants {
                         prevPos += 8;
                     }
 
-                    // Davor oder danach liegt noch ein Stein der weder in einer geschlossenen
+                    // Davor oder danach liegt noch ein Stein, der weder in einer geschlossenen
                     // Mühle, noch in genau der offenen die wir uns gerade angucken, liegt.
                     if ((boardWithoutOpenAndClosedMills & ((1L << prevPos) | (1L << nextPos))) != 0) {
                         openMills++;
