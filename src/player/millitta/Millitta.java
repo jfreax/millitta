@@ -83,8 +83,8 @@ public class Millitta extends Player implements Constants {
                 }
                 break;
             case REMOVE_MAN:
-                board |= (1L << BIT_GAMEPHASE) | (1L << (BIT_GAMEPHASE + 1));
-                // TODO ziehen (0) oder nehmen(1)? BIT_(GAMEPHASE+2)
+                board |= (1L << BIT_GAMEPHASE) | (1L << (BIT_GAMEPHASE + 1)) | (1L << (BIT_GAMEPHASE + 2));
+                // aka nehmen
                 break;
             default:
         }

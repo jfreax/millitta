@@ -101,7 +101,7 @@ public class Evaluate implements Constants {
         in dem der Stein zur fertigen Mühle fehlt, auch ein Stein des selben Spielers liegt.
         Dieser Stein darf dann natürlich nicht selber schon Teil der gerade betrachteten offenen Mühle sein.
      */
-    private int getOpenMills() {
+    public int getOpenMills() {
         int openMills = 0;
         final long mask_move_phase = 4L << BIT_GAMEPHASE; // 0b100
 
@@ -156,7 +156,7 @@ public class Evaluate implements Constants {
         Erweiterung des Algorithmus zum erkennen von offenen Mühlen.
         Hier muss nur der angrenzende Stein selbst schon in einer Mühle sein.
      */
-    private int getDoubleMills() {
+    public int getDoubleMills() {
         int doubleMills = 0;
 
 
