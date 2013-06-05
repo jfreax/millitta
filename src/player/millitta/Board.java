@@ -1,8 +1,8 @@
 package player.millitta;
 
 
-public class Helper implements Constants {
-    static public int getMyMen(long board) {
+public class Board implements Constants {
+    static public int getMyMenOnBoard(long board) {
         if ((board & (1L << BIT_PLAYER)) != 0) {
             return Long.bitCount(board & BITS_MENS2);
         } else {
@@ -23,13 +23,43 @@ public class Helper implements Constants {
     }
 
 
-    // Remove from oppsite player
-    static public long removeMan(long board, int pos) {
+    /*
+        Entfernen einer Spielfigur des Gegners.
+        Testet nicht ob das ein valider Zug ist!
+    */
+    static public long removeOppMan(long board, int pos) {
         if ((board & (1L << BIT_PLAYER)) == 0) {
             return board & ~(1L << (pos+24));
         } else {
             return board & ~(1L << pos);
         }
+    }
+
+    /*
+        Testet ob das entfernen einer gegnerisches Figur an Position pos
+        vom Spielbrett moeglich (erlaubt) ist.
+     */
+    static public boolean isRemoveOppManPossible(long board, int pos) {
+        //
+        if ( !isOppMen(board,pos)) {
+            return false;
+        }
+
+        // TODO
+
+        return true;
+    }
+
+    static public boolean isOppMen(long board, int at) {
+        if ((board & (1L << BIT_PLAYER)) == 0) {
+            return (board & (1L << (24+at))) != 0;
+        } else {
+            return (board & (1L << at)) != 0;
+        }
+    }
+
+    static public boolean isOppMenInMill(long board, int pos) {
+        return false; // TODO
     }
 
     static public int playerOnPos( long board, int pos ) {
