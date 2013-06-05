@@ -2,6 +2,7 @@ package player.millitta;
 
 
 public interface Constants {
+    /* Bit position */
     long BIT_PLAYER = 48;
     long BIT_PHASE = 49;
     long BIT_ACTION = 52;
@@ -19,5 +20,33 @@ public interface Constants {
     long MAGIC_NO_BOARD = -1L; // kennzeichnet ein invaliden oder nicht existenten board status
 
 
+    /*
+    Masks for all 16 mills.
+    Bits 1-24 are board position.
+    Bits 24-31 are unused
+   */
+    final static int mills[] = {
+            7, // 0, 1, 2
+            28, // 2, 3, 4
+            112, // 4, 5, 6
+            193, // 6, 7, 0
+
+            1792, // 8, 9, 10
+            7168, // 10, 11, 12
+            28672, // 12, 13, 14
+            49408, // 14, 15, 8
+
+            459752, // 16, 17, 18
+            1835008, // 18, 19, 20
+            7340032, // 20, 21, 22
+            12648448, // 22, 23, 16
+
+            131586, // 1, 9, 17
+            526344, // 3, 11, 19
+            2105376, // 5, 13, 21
+            8421504 // 7, 15, 23
+    };
+
+    /* Math constants */
     double LOG2 = Math.log(2);
 }

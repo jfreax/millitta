@@ -2,32 +2,7 @@ package player.millitta;
 
 
 public class Evaluate implements Constants {
-    /*
-        Masks for all 16 mills.
-        Bits 1-24 are board position.
-        Bits 24-31 are unused
-     */
-    private final static int mills[] = {
-            7, // 0, 1, 2
-            28, // 2, 3, 4
-            112, // 4, 5, 6
-            193, // 6, 7, 0
 
-            1792, // 8, 9, 10
-            7168, // 10, 11, 12
-            28672, // 12, 13, 14
-            49408, // 14, 15, 8
-
-            459752, // 16, 17, 18
-            1835008, // 18, 19, 20
-            7340032, // 20, 21, 22
-            12648448, // 22, 23, 16
-
-            131586, // 1, 9, 17
-            526344, // 3, 11, 19
-            2105376, // 5, 13, 21
-            8421504 // 7, 15, 23
-    };
     private static final double[] Weighting = {
             1.0, // open mills
             3.0, // closed mills
