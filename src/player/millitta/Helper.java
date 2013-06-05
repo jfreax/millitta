@@ -22,6 +22,16 @@ public class Helper implements Constants {
         }
     }
 
+
+    // Remove from oppsite player
+    static public long removeMan(long board, int pos) {
+        if ((board & (1L << BIT_PLAYER)) == 0) {
+            return board & ~(1L << (pos+24));
+        } else {
+            return board & ~(1L << pos);
+        }
+    }
+
     static public int playerOnPos( long board, int pos ) {
         if( (board & (1L << pos)) != 0 ) {
             return 1;
