@@ -103,7 +103,7 @@ public class Evaluate implements Constants {
      */
     public int getOpenMills() {
         int openMills = 0;
-        final long mask_move_phase = 4L << BIT_GAMEPHASE; // 0b100
+        final long mask_move_phase = 4L << BIT_PHASE; // 0b100
 
         calcBoardWithoutMills();
 
