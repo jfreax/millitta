@@ -6,7 +6,6 @@ public class Generator implements Constants, algds.Constants {
 
     private long board_  = 0L;
     private long action = -1L;
-    private long phase  = -1L;
     private int playerID = -1;
 
     //private ArrayList<Long> possNextBoards = null;
@@ -14,7 +13,7 @@ public class Generator implements Constants, algds.Constants {
     private int boardPointer = 0;
 
 
-    Generator(long board) {
+    public Generator(long board) {
         board_ = board;
 
         calcAction();
@@ -28,7 +27,7 @@ public class Generator implements Constants, algds.Constants {
 
 
     private void calcAction() {
-        if ((board_ & ((1L << BIT_ACTION) | (1L << (BIT_ACTION + 1)))) != 0L ) {
+        if ((board_ & ((1L << BIT_ACTION))) != 0L || ((board_ & (1L << (BIT_ACTION + 1))) != 0L) ) {
             action = REMOVE_MAN;
         } else if ((board_ & (1L << BIT_ACTION)) != 0L ) {
             action = SET_MAN;
@@ -40,7 +39,7 @@ public class Generator implements Constants, algds.Constants {
     public long[] getNextBoards() {
         boardPointer = 0;
 
-        if( (board_ & ((1L << BIT_PHASE) | (1L << (BIT_PHASE+1)))) != 0) { // Flugphase
+        if( (board_ & (1L << BIT_PHASE)) != 0 && (board_ & (1L << (BIT_PHASE+1))) != 0) { // Flugphase
 
 
         } else if ((board_ & (1L << BIT_PHASE)) != 0) { // Setzphase
@@ -51,7 +50,7 @@ public class Generator implements Constants, algds.Constants {
                 return nextBoards;
             }
 
-            long mergedBoardPoints = (board_ & BITS_MENS1) | ((board_ & BITS_MENS2) << 24);
+            long mergedBoardPoints = (board_ & BITS_MENS1) | ((board_ & BITS_MENS2) >> 24);
 
             for( int i = 0; i < 24; i++ ) {
                 if ((mergedBoardPoints & (1L << i)) == 0) {
