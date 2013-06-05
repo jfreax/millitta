@@ -61,11 +61,13 @@ public class Generator implements Constants, algds.Constants {
                     }
                 }
             } else { // Setzphase + Figure rauskicken
-                System.out.println("Kick it!");
+                System.out.print("Kick it! ");
                 for(int i = 0; i <= 24; i++) {
-                    if( Board.isOppMen(board_, i) ) {
+                    System.out.println(i + " -> " + Board.isRemoveOppManPossible(board_, i));
+                    if( Board.isRemoveOppManPossible(board_, i) ) {
                         nextBoards[boardPointer++] = Board.removeOppMan(board_, i);
                     }
+                    // TODO was ist wenn alle Steine des Gegners in einer Mühle sind? (hint: dann kann jeder gekickt werden!)
                 }
 
             }

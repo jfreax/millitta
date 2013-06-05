@@ -13,6 +13,7 @@ public class Evaluate implements Constants {
             1.5, // moveable
             1.0  // Kreuzungen
     };
+
     private long boardState_ = 0L;
     /* board state for only the player to evaluate */
     private long playersBoard_ = 0L;

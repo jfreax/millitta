@@ -22,6 +22,10 @@ public class Board implements Constants {
         }
     }
 
+    static public int numberOfOppManOnBoard(long board, int pos) {
+        return Long.bitCount( board & BITS_MENS2 );
+    }
+
 
     /*
         Entfernen einer Spielfigur des Gegners.
@@ -40,12 +44,20 @@ public class Board implements Constants {
         vom Spielbrett moeglich (erlaubt) ist.
      */
     static public boolean isRemoveOppManPossible(long board, int pos) {
-        //
+        // Wenn dort keine Figur steht, kann man sie auch nicht entfernen.
         if ( !isOppMen(board,pos)) {
+            System.out.println("Not a men here: " + pos);
             return false;
         }
 
-        // TODO
+        // Wenn mehr als drei gegnerische Figuren auf dem Spielbrett sind,
+        // dann darf die zu entfernende Figur nicht in einer Muehle sein.
+        if( numberOfOppManOnBoard(board, pos) > 3 ) {
+            System.out.println("Is mill? " + pos + " -> " + isOppMenInMill(board, pos));
+            if( isOppMenInMill(board, pos) ) {
+                return false;
+            }
+        }
 
         return true;
     }
@@ -59,7 +71,14 @@ public class Board implements Constants {
     }
 
     static public boolean isOppMenInMill(long board, int pos) {
-        return false; // TODO
+        for( int mill : mills ) {
+            if (Long.bitCount(board & mill) == 3) {
+                if ((mill & (1L << pos)) != 0 ) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     static public int playerOnPos( long board, int pos ) {
