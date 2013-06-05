@@ -75,6 +75,7 @@ public class Millitta extends Player implements Constants {
 
         switch (getAction()) {
             case SET_MAN:
+                board |= 1L << BIT_PHASE; // Setzphase
                 board |= 1L << BIT_ACTION;
                 break;
             case MOVE_MAN:
@@ -82,9 +83,16 @@ public class Millitta extends Player implements Constants {
                 break;
             case REMOVE_MAN:
                 board |= (1L << BIT_ACTION) | (1L << (BIT_ACTION + 1));
-                // aka nehmen
                 break;
             default:
+        }
+
+        if ( getAction() != SET_MAN ) {
+            if( Helper.getMyMen(board) <= 3 ) { // Flugphase
+                board |= (1L << BIT_PHASE) | (1L << (BIT_PHASE+1));
+            } else { // Zugphase
+                // BIT_PHASE => 0
+            }
         }
 
         return board;
