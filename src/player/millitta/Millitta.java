@@ -75,15 +75,13 @@ public class Millitta extends Player implements Constants {
 
         switch (getAction()) {
             case SET_MAN:
-                board |= 1L << BIT_GAMEPHASE;
+                board |= 1L << BIT_ACTION;
                 break;
             case MOVE_MAN:
-                if (getMyColor() == WHITE) {
-                    board |= 1L << BIT_GAMEPHASE + 1;
-                }
+                board |= 1L << BIT_ACTION + 1;
                 break;
             case REMOVE_MAN:
-                board |= (1L << BIT_GAMEPHASE) | (1L << (BIT_GAMEPHASE + 1)) | (1L << (BIT_GAMEPHASE + 2));
+                board |= (1L << BIT_ACTION) | (1L << (BIT_ACTION + 1));
                 // aka nehmen
                 break;
             default:
