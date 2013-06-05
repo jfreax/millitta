@@ -54,7 +54,7 @@ public class Evaluate implements Constants {
 
         if ((boardState_ & (1L << BIT_PLAYER)) != 0) {
             playersBoard_ = boardState_ & ~(long) (Math.pow(2, 24) - 1); // Alles bis Bit 24 löschen
-            playersBoard_ &= (long) (Math.pow(2, 48) - 1) << 24; // Player 1 Daten auf Player 0 Datenposition verschieben
+            playersBoard_ &= (long) (Math.pow(2, 48) - 1) >> 24; // Player 1 Daten auf Player 0 Datenposition verschieben
         }
     }
 
@@ -117,7 +117,7 @@ public class Evaluate implements Constants {
 
                     long nextPos = holePos + 1;
                     long prevPos = holePos - 1;
-                    if (nextPos % 8 == 0) { // "Überlauf"
+                    if (nextPos % 8 == 0) { // "Ueberlauf"
                         nextPos -= 8;
                     } else if (prevPos == -1 || prevPos % 8 == 7) {
                         prevPos += 8;
