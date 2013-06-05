@@ -2,16 +2,17 @@ package player.millitta;
 
 
 public interface Constants {
-    int BIT_PLAYER = 48;
-    int BIT_GAMEPHASE = 49;
+    long BIT_PLAYER = 48;
+    //int BIT_GAMEPHASE = 49;
+    long BIT_ACTION = 49;
 
-    int GAMEPHASE_SETMAN = 0;
-    int GAMEPHASE_MOVEMAN = 1;
-    int GAMEPHASE_REMOVEMAN = 2;
+    long GAMEPHASE_SETMAN = 0;
+    long GAMEPHASE_MOVEMAN = 1;
+    long GAMEPHASE_REMOVEMAN = 2;
 
-    //int BIT_
     int WEIGHT_OPEN_MILL = 0;
     int WEIGHT_CLOSED_MILL = 1;
-    double LOG2 = Math.log(2);
 
+
+    double LOG2 = Math.log(2);
 }
