@@ -13,8 +13,8 @@ public class GeneratorRemoveAction extends AbstractGenerator {
         boardPointer = 0;
 
         boolean removed = false;
-        for(int i = 0; i < 24; i++) {
-            if( isRemoveOppManPossible(i) ) {
+        for (int i = 0; i < 24; i++) {
+            if (isRemoveOppManPossible(i)) {
                 removed = true;
                 nextBoards[boardPointer++] = removeOppMan(i);
             }
@@ -22,9 +22,9 @@ public class GeneratorRemoveAction extends AbstractGenerator {
         // Kein Stein konnte entfernt werden.
         // Das heißt alle Steine des Gegners sind in einer Muehle.
         // Also kann ich jeden beliebigen Stein rausschmeissen.
-        if( !removed ) {
-            for(int i = 0; i < 24; i++) {
-                if( isOppMen(i) ) {
+        if (!removed) {
+            for (int i = 0; i < 24; i++) {
+                if (isOppMen(i)) {
                     nextBoards[boardPointer++] = removeOppMan(i);
                 }
             }
