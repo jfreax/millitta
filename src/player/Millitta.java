@@ -7,8 +7,7 @@ import player.millitta.Generate.Generator;
 
 public class Millitta extends player.millitta.Millitta {
 
-    public static void main(String [ ] args)
-    {
+    public static void main(String[] args) {
         long board = 9288675304800256L;
         //board |= 1L << BIT_PHASE;
 
@@ -28,8 +27,8 @@ public class Millitta extends player.millitta.Millitta {
         System.out.println("Nexts:");
         Board.printBoard(next[0]);
 
-        for( int i = 0; true; i++ ) {
-            if ( next[i] == -1L ) {
+        for (int i = 0; true; i++) {
+            if (next[i] == -1L) {
                 break;
             }
             //Board.printBoard(next[i]);

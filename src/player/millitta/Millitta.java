@@ -32,7 +32,7 @@ public class Millitta extends Player implements Constants {
         //Evaluate eval = new Evaluate(board);
 
 
-        setMessage("Board: "+ String.valueOf(board));
+        setMessage("Board: " + String.valueOf(board));
 
         AbstractGenerator nextBoards = Generator.get(board);
         long nextBoard = nextBoards.getNextBoards()[0];
@@ -42,24 +42,24 @@ public class Millitta extends Player implements Constants {
         // Make the move!
         long bitDiff = board ^ nextBoard;
         if ((board & ((1L << BIT_ACTION))) != 0L) {
-            int pos = (int)(Math.log(bitDiff) / LOG2);
-            pos = pos >= 24 ? pos-24 : pos;
+            int pos = (int) (Math.log(bitDiff) / LOG2);
+            pos = pos >= 24 ? pos - 24 : pos;
 
-            if ( (board & (1L << (BIT_ACTION + 1))) != 0L ) { // Remove man
+            if ((board & (1L << (BIT_ACTION + 1))) != 0L) { // Remove man
                 this.removeMan(pos);
 
             } else { // Set man
                 this.setMan(pos);
             }
         } else { // move man
-            int pos1 = (int)(Math.log(bitDiff) / LOG2); // highest set bit
-            int pos2 = (int)(Math.log(bitDiff & ~(1L << pos1)) / LOG2); // second set bit
+            int pos1 = (int) (Math.log(bitDiff) / LOG2); // highest set bit
+            int pos2 = (int) (Math.log(bitDiff & ~(1L << pos1)) / LOG2); // second set bit
 
             // TODO lesbar machen
-            if( (board & (1L << pos1)) == 0L ) {
-                moveMan(pos2 >= 24 ? pos2-24 : pos2, pos1 >= 24 ? pos1-24 : pos1);
+            if ((board & (1L << pos1)) == 0L) {
+                moveMan(pos2 >= 24 ? pos2 - 24 : pos2, pos1 >= 24 ? pos1 - 24 : pos1);
             } else {
-                moveMan(pos1 >= 24 ? pos1-24 : pos1, pos2 >= 24 ? pos2-24 : pos2);
+                moveMan(pos1 >= 24 ? pos1 - 24 : pos1, pos2 >= 24 ? pos2 - 24 : pos2);
             }
 
         }
@@ -106,10 +106,10 @@ public class Millitta extends Player implements Constants {
                 break;
         }
 
-        if ( getAction() != SET_MAN ) {
-            if( Board.getMyMenOnBoard(board) <= 3 && countMyRest() <= 0 ) { // Flugphase
-                board |= (1L << BIT_PHASE) | (1L << (BIT_PHASE+1));
-            } else if ( countMyRest() > 0 ) { // Setzphase
+        if (getAction() != SET_MAN) {
+            if (Board.getMyMenOnBoard(board) <= 3 && countMyRest() <= 0) { // Flugphase
+                board |= (1L << BIT_PHASE) | (1L << (BIT_PHASE + 1));
+            } else if (countMyRest() > 0) { // Setzphase
                 board |= 1L << BIT_PHASE;
             } else { // Zugphase
                 // BIT_PHASE => 0
