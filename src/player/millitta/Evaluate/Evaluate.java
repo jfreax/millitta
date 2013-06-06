@@ -55,7 +55,7 @@ public class Evaluate implements Constants {
         Durch Abzählen, bei wievielen der 16 Masken dies vorkommt,
         weiß man wieviele Mühlen der Spieler insgesamt hat.
      */
-    public int getClosedMills() {
+    private int getClosedMills() {
         int closedMills = 0;
         boardWithoutMills = playersBoard_;
 
@@ -79,7 +79,7 @@ public class Evaluate implements Constants {
         in dem der Stein zur fertigen Mühle fehlt, auch ein Stein des selben Spielers liegt.
         Dieser Stein darf dann natürlich nicht selber schon Teil der gerade betrachteten offenen Mühle sein.
      */
-    public int getOpenMills() {
+    private int getOpenMills() {
         int openMills = 0;
         final long mask_move_phase = 4L << BIT_PHASE; // 0b100
 
@@ -134,7 +134,7 @@ public class Evaluate implements Constants {
         Erweiterung des Algorithmus zum erkennen von offenen Mühlen.
         Hier muss nur der angrenzende Stein selbst schon in einer Mühle sein.
      */
-    public int getDoubleMills() {
+    private int getDoubleMills() {
         int doubleMills = 0;
 
 
