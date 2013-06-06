@@ -5,8 +5,8 @@ import player.millitta.Board;
 import player.millitta.Constants;
 
 abstract public class AbstractGenerator implements Constants, algds.Constants {
-    protected static long[] nextBoards = new long[100]; // TODO find max. size
     protected long board = 0L;
+    protected static long[] nextBoards = new long[100]; // TODO find max. size
     protected int boardPointer = 0;
 
 
@@ -16,16 +16,19 @@ abstract public class AbstractGenerator implements Constants, algds.Constants {
 
     abstract public long[] getNextBoards();
 
+
     public int getMyMenOnBoard() {
         return Board.getMyMenOnBoard(board);
     }
+
 
     public int getFreePoss() {
         return 24 - Long.bitCount((board & BITS_MENS1) | ((board & BITS_MENS2) >> 24));
     }
 
+
     public long setMyMan(int at) {
-        if ((board & (1L << BIT_PLAYER)) != 0) {
+        if ((board & (1L << BIT_PLAYER)) != 0L) {
             return board | (1L << (at + 24));
         } else {
             return board | (1L << at);
@@ -44,24 +47,27 @@ abstract public class AbstractGenerator implements Constants, algds.Constants {
         return (board & ((1L << (24 + at)) | (1L << at))) != 0L;
     }
 
+
     public long moveMyMen(int from, int to) {
-        if ((board & (1L << BIT_PLAYER)) != 0) {
+        if ((board & (1L << BIT_PLAYER)) != 0L) {
             from += 24;
             to += 24;
         }
         return (board | (1L << to)) & ~(1L << from);
     }
 
+
     public int numberOfOppManOnBoard() {
         return Long.bitCount(board & BITS_MENS2);
     }
+
 
     /*
         Entfernen einer Spielfigur des Gegners.
         Testet nicht ob das ein valider Zug ist!
     */
     public long removeOppMan(int pos) {
-        if ((board & (1L << BIT_PLAYER)) == 0) {
+        if ((board & (1L << BIT_PLAYER)) == 0L) {
             return board & ~(1L << (pos + 24));
         } else {
             return board & ~(1L << pos);
@@ -90,7 +96,7 @@ abstract public class AbstractGenerator implements Constants, algds.Constants {
     }
 
     public boolean isOppMen(int at) {
-        if ((board & (1L << BIT_PLAYER)) == 0) {
+        if ((board & (1L << BIT_PLAYER)) == 0L) {
             return (board & (1L << (24 + at))) != 0L;
         } else {
             return (board & (1L << at)) != 0L;
@@ -98,13 +104,14 @@ abstract public class AbstractGenerator implements Constants, algds.Constants {
     }
 
     public boolean isOppMenInMill(int pos) {
-        if ((board & (1L << BIT_PLAYER)) == 0) {
-            pos += 24;
+        long tmpBoard = board;
+        if ((board & (1L << BIT_PLAYER)) == 0L) {
+            tmpBoard >>= 24;
         }
 
         for (int mill : mills) {
-            if (Long.bitCount(board & mill) == 3) {
-                if ((mill & (1L << pos)) != 0) {
+            if (Long.bitCount(tmpBoard & mill) == 3) {
+                if ((mill & (1L << pos)) != 0L) {
                     return true;
                 }
             }

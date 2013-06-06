@@ -4,8 +4,8 @@ package player.millitta;
 public class Board implements Constants {
 
     static public int getMyMenOnBoard(long board) {
-        if ((board & (1L << BIT_PLAYER)) != 0) {
-            return Long.bitCount(board & BITS_MENS2);
+        if ((board & (1L << BIT_PLAYER)) == 0L) {
+            return Long.bitCount(board & BITS_MENS1);
         } else {
             return Long.bitCount(board & BITS_MENS2);
         }
