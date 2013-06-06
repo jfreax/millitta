@@ -1,6 +1,7 @@
 package player.millitta;
 
 import algds.Player;
+import player.millitta.Evaluate.Evaluator;
 import player.millitta.Generate.AbstractGenerator;
 import player.millitta.Generate.Generator;
 
@@ -29,14 +30,12 @@ public class Millitta extends Player implements Constants {
     public void play() {
         board = getBoardLong();
 
-        //Evaluate eval = new Evaluate(board);
+
+        Evaluator eval = new Evaluator(board);
+        long nextBoard = eval.getNextBoard();
 
 
         setMessage("Board: " + String.valueOf(board));
-
-        AbstractGenerator nextBoards = Generator.get(board);
-        long nextBoard = nextBoards.getNextBoards()[0];
-
         setMessage("Next board: " + nextBoard);
 
         // Make the move!
