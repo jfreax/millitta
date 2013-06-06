@@ -32,17 +32,17 @@ abstract public class AbstractGenerator implements Constants, algds.Constants {
     }
 
 
-    public int getMyMenOnBoard(long board) {
+    public int getMyMenOnBoard() {
         return Board.getMyMenOnBoard(board);
     }
 
 
-    public int getFreePoss(long board) {
+    public int getFreePoss() {
         return 24 - Long.bitCount((board & BITS_MENS1) | ((board & BITS_MENS2) >> 24));
     }
 
 
-    public long setMan(long board, int pos) {
+    public long setMan(int pos) {
         if ((board & (1L << BIT_PLAYER)) != 0) {
             return board | (1L << (pos+24));
         } else {
@@ -51,7 +51,7 @@ abstract public class AbstractGenerator implements Constants, algds.Constants {
     }
 
 
-    public int numberOfOppManOnBoard(long board, int pos) {
+    public int numberOfOppManOnBoard() {
         return Long.bitCount( board & BITS_MENS2 );
     }
 
@@ -60,7 +60,7 @@ abstract public class AbstractGenerator implements Constants, algds.Constants {
         Entfernen einer Spielfigur des Gegners.
         Testet nicht ob das ein valider Zug ist!
     */
-    public long removeOppMan(long board, int pos) {
+    public long removeOppMan(int pos) {
         if ((board & (1L << BIT_PLAYER)) == 0) {
             return board & ~(1L << (pos+24));
         } else {
@@ -72,18 +72,18 @@ abstract public class AbstractGenerator implements Constants, algds.Constants {
         Testet ob das entfernen einer gegnerisches Figur an Position pos
         vom Spielbrett moeglich (erlaubt) ist.
      */
-    public boolean isRemoveOppManPossible(long board, int pos) {
+    public boolean isRemoveOppManPossible(int pos) {
         // Wenn dort keine Figur steht, kann man sie auch nicht entfernen.
-        if ( !isOppMen(board,pos)) {
+        if ( !isOppMen(pos)) {
             System.out.println("Not a men here: " + pos);
             return false;
         }
 
         // Wenn mehr als drei gegnerische Figuren auf dem Spielbrett sind,
         // dann darf die zu entfernende Figur nicht in einer Muehle sein.
-        if( numberOfOppManOnBoard(board, pos) > 3 ) {
-            System.out.println("Is mill? " + pos + " -> " + isOppMenInMill(board, pos));
-            if( isOppMenInMill(board, pos) ) {
+        if( numberOfOppManOnBoard() > 3 ) {
+            System.out.println("Is mill? " + pos + " -> " + isOppMenInMill(pos));
+            if( isOppMenInMill(pos) ) {
                 return false;
             }
         }
@@ -91,15 +91,15 @@ abstract public class AbstractGenerator implements Constants, algds.Constants {
         return true;
     }
 
-    public boolean isOppMen(long board, int at) {
+    public boolean isOppMen(int at) {
         if ((board & (1L << BIT_PLAYER)) == 0) {
-            return (board & (1L << (24+at))) != 0;
+            return (board & (1L << (24+at))) != 0L;
         } else {
-            return (board & (1L << at)) != 0;
+            return (board & (1L << at)) != 0L;
         }
     }
 
-    public boolean isOppMenInMill(long board, int pos) {
+    public boolean isOppMenInMill(int pos) {
         for( int mill : mills ) {
             if (Long.bitCount(board & mill) == 3) {
                 if ((mill & (1L << pos)) != 0 ) {
