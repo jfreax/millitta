@@ -42,12 +42,29 @@ abstract public class AbstractGenerator implements Constants, algds.Constants {
     }
 
 
-    public long setMan(int pos) {
+    public long setMyMan(int at) {
         if ((board & (1L << BIT_PLAYER)) != 0) {
-            return board | (1L << (pos+24));
+            return board | (1L << (at+24));
         } else {
-            return board | (1L << pos);
+            return board | (1L << at);
         }
+    }
+
+    public boolean isMyMen(int at) {
+        if ((board & (1L << BIT_PLAYER)) != 0) {
+            return (board & (1L << (24+at))) != 0L;
+        } else {
+            return (board & (1L << at)) != 0L;
+        }
+    }
+
+    public boolean isMen(int at) {
+        return (board & ((1L << (24+at)) | (1L << at))) != 0L;
+    }
+
+
+    public long moveMyMen(int from, int to) {
+        return board | (1L << to) & ~(1L << from);
     }
 
 
@@ -75,13 +92,12 @@ abstract public class AbstractGenerator implements Constants, algds.Constants {
     public boolean isRemoveOppManPossible(int pos) {
         // Wenn dort keine Figur steht, kann man sie auch nicht entfernen.
         if ( !isOppMen(pos)) {
-            System.out.println("Not a men here: " + pos);
             return false;
         }
 
         // Wenn mehr als drei gegnerische Figuren auf dem Spielbrett sind,
         // dann darf die zu entfernende Figur nicht in einer Muehle sein.
-        if( numberOfOppManOnBoard() > 3 ) {
+        if( numberOfOppManOnBoard() >= 3 ) {
             System.out.println("Is mill? " + pos + " -> " + isOppMenInMill(pos));
             if( isOppMenInMill(pos) ) {
                 return false;
