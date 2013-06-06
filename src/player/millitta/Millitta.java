@@ -40,28 +40,31 @@ public class Millitta extends Player implements Constants {
         setMessage("Next board: " + nextBoard);
 
         long BITS_PLAYER_POINT = BITS_MENS1;
+        long bitDiff = board ^ nextBoard;
 
         if ((board & ((1L << BIT_ACTION))) != 0L) {
-            int pos = (int)(Math.log(board ^ nextBoard) / LOG2);
+            int pos = (int)(Math.log(bitDiff) / LOG2);
             pos = pos >= 24 ? pos-24 : pos;
 
             if ( (board & (1L << (BIT_ACTION + 1))) != 0L ) { // Remove man
                 this.removeMan(pos);
             } else { // Set man
-                setMessage("OK!" + pos);
                 this.setMan(pos);
             }
         } else { // move man
-            // TODO
-        }
+            int pos1 = (int)(Math.log(bitDiff) / LOG2); // highest set bit
+            int pos2 = (int)(Math.log(bitDiff & ~(1L << pos1)) / LOG2); // second set bit
 
-        //for (int i = 0; i < 24; i++) {
-        //    //setMessage("& "+ (board & (1<<i)));
-        //    if (((board & (1 << i)) + (board & (1 << i + 24))) == 0) {
-        //        setMan(i);
-        //        return;
-        //    }
-        //}
+            System.out.println("Move man: " + pos1 + " <-> " + pos2 + " von " + bitDiff);
+
+            // TODO lesbar machen
+            if( (board & (1L << pos1)) == 0L ) {
+                moveMan(pos2 >= 24 ? pos2-24 : pos2, pos1 >= 24 ? pos1-24 : pos1);
+            } else {
+                moveMan(pos1 >= 24 ? pos1-24 : pos1, pos2 >= 24 ? pos2-24 : pos2);
+            }
+
+        }
     }
 
     public String getAuthor() {
@@ -69,6 +72,7 @@ public class Millitta extends Player implements Constants {
     }
 
     private long getBoardLong() {
+        System.out.println("getBoardLong");
         long board = 0L;
         int[] boardArray = getBoard();
 
@@ -79,29 +83,41 @@ public class Millitta extends Player implements Constants {
         for (int i = 0; i < 24; ++i) {
             switch (boardArray[i]) {
                 case BLACK:
-                    board |= 1 << (24 + i);
+                    board |= 1L << (24 + i);
                     break;
                 case WHITE:
-                    board |= 1 << i;
+                    board |= 1L << i;
                     break;
                 default:
                     break;
             }
         }
 
+        if ((board & ((1L << BIT_ACTION))) != 0L && ((board & (1L << (BIT_ACTION + 1))) != 0L) ) {
+            System.out.println("Neeeeeein00 " + board);
+        }
+
         switch (getAction()) {
             case SET_MAN:
+                System.out.println("Action -> Set_Man");
                 board |= 1L << BIT_PHASE; // Setzphase
                 board |= 1L << BIT_ACTION;
                 break;
             case MOVE_MAN:
+                System.out.println("Action -> Move_Man");
                 board |= 1L << BIT_ACTION + 1;
                 break;
             case REMOVE_MAN:
+                System.out.println("Action -> Remove_Man");
                 board |= (1L << BIT_ACTION) | (1L << (BIT_ACTION + 1));
                 break;
             default:
+                System.out.println("Whatt??");
                 break;
+        }
+
+        if ((board & ((1L << BIT_ACTION))) != 0L && ((board & (1L << (BIT_ACTION + 1))) != 0L) ) {
+            System.out.println("Neeeeeein0");
         }
 
         if ( getAction() != SET_MAN ) {
@@ -109,11 +125,18 @@ public class Millitta extends Player implements Constants {
                 System.out.println("Flugphase");
                 board |= (1L << BIT_PHASE) | (1L << (BIT_PHASE+1));
             } else if ( countMyRest() > 0 ) { // Setzphase
+                System.out.println("countMyRest() -> " + countMyRest());
                 board |= 1L << BIT_PHASE;
             } else { // Zugphase
                 System.out.println("Zugphase");
                 // BIT_PHASE => 0
             }
+        }
+
+        if ((board & ((1L << BIT_ACTION))) != 0L && ((board & (1L << (BIT_ACTION + 1))) != 0L) ) {
+            System.out.println("Neeeeeein");
+        } else {
+            System.out.println("Mhh");
         }
 
         return board;

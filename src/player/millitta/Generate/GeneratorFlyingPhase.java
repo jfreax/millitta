@@ -9,6 +9,10 @@ public class GeneratorFlyingPhase extends AbstractGenerator {
 
     @Override
     public long[] getNextBoards() {
-        return new long[0];  //To change body of implemented methods use File | Settings | File Templates.
+        System.out.println("Generate: Flugphase");
+        boardPointer = 0;
+
+        nextBoards[boardPointer] = MAGIC_NO_BOARD;
+        return nextBoards;
     }
 }

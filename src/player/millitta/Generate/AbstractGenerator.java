@@ -6,30 +6,16 @@ import player.millitta.Constants;
 
 abstract public class AbstractGenerator implements Constants, algds.Constants {
     protected long board  = 0L;
-    protected long action = -1L;
-
     protected static long[] nextBoards = new long[100]; // TODO find max. size
     protected int boardPointer = 0;
 
 
     public AbstractGenerator(long board) {
         this.board = board;
-        calcAction();
     }
 
     abstract public long[] getNextBoards();
 
-
-    private void calcAction() {
-        if ((board & ((1L << BIT_ACTION))) != 0L && ((board & (1L << (BIT_ACTION + 1))) != 0L) ) {
-            System.out.println("Remove man");
-            action = REMOVE_MAN;
-        } else if ((board & (1L << BIT_ACTION)) != 0L ) {
-            action = SET_MAN;
-        } else {
-            action = MOVE_MAN;
-        }
-    }
 
 
     public int getMyMenOnBoard() {

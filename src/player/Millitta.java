@@ -9,8 +9,8 @@ public class Millitta extends player.millitta.Millitta {
 
     public static void main(String [ ] args)
     {
-        long board = 5348025077646592L;
-        board |= 1L << BIT_PHASE;
+        long board = 9288675304800256L;
+        //board |= 1L << BIT_PHASE;
 
         System.out.println("ok");
         Evaluate eval = new Evaluate(board);

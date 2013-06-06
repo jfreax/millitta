@@ -8,7 +8,9 @@ public class Generator implements Constants, algds.Constants {
     }
 
     static public AbstractGenerator get(long board) {
-        if( (board & (1L << BIT_PHASE)) != 0 && (board & (1L << (BIT_PHASE+1))) != 0) { // Flugphase
+        if ((board & ((1L << BIT_ACTION))) != 0L && ((board & (1L << (BIT_ACTION + 1))) != 0L) ) { // Remove
+            return new GeneratorRemoveAction(board);
+        } else if( (board & (1L << BIT_PHASE)) != 0 && (board & (1L << (BIT_PHASE+1))) != 0) { // Flugphase
             return new GeneratorFlyingPhase(board);
         } else if ((board & (1L << BIT_PHASE)) != 0) { // Setzphase
             return new GeneratorPlacingPhase(board);
