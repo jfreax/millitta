@@ -2,8 +2,6 @@ package player.millitta;
 
 import algds.Player;
 import player.millitta.Evaluate.Evaluator;
-import player.millitta.Generate.AbstractGenerator;
-import player.millitta.Generate.Generator;
 
 public class Millitta extends Player implements Constants {
     private long board;
@@ -35,7 +33,7 @@ public class Millitta extends Player implements Constants {
         long nextBoard = eval.getNextBoard();
 
 
-        setMessage("Board: " + String.valueOf(board));
+        setMessage("Helper: " + String.valueOf(board));
         setMessage("Next board: " + nextBoard);
 
         // Make the move!
@@ -106,7 +104,7 @@ public class Millitta extends Player implements Constants {
         }
 
         if (getAction() != SET_MAN) {
-            if (Board.getMyMenOnBoard(board) <= 3 && countMyRest() <= 0) { // Flugphase
+            if (Helper.getMyMenOnBoard(board) <= 3 && countMyRest() <= 0) { // Flugphase
                 board |= (1L << BIT_PHASE) | (1L << (BIT_PHASE + 1));
             } else if (countMyRest() > 0) { // Setzphase
                 board |= 1L << BIT_PHASE;

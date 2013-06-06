@@ -1,7 +1,6 @@
 package player;
 
-import player.millitta.Board;
-import player.millitta.Evaluate.Evaluate;
+import player.millitta.Helper;
 import player.millitta.Generate.AbstractGenerator;
 import player.millitta.Generate.Generator;
 
@@ -11,11 +10,11 @@ public class Millitta extends player.millitta.Millitta {
         long board = 9288675304800256L;
         //board |= 1L << BIT_PHASE;
 
-        System.out.println("ok");
-        Evaluate eval = new Evaluate(board);
-        System.out.println("Bla " + eval.getClosedMills());
+        //System.out.println("ok");
+        //Evaluate eval = new Evaluate(board);
+        //System.out.println("Bla " + eval.getClosedMills());
 
-        Board.printBoard(board);
+        Helper.printBoard(board);
 
         AbstractGenerator gen = Generator.get(board);
         long[] next = gen.getNextBoards();
@@ -25,13 +24,13 @@ public class Millitta extends player.millitta.Millitta {
         System.out.println("Now: " + board + " | Next: " + next[0]);
 
         System.out.println("Nexts:");
-        Board.printBoard(next[0]);
+        Helper.printBoard(next[0]);
 
         for (int i = 0; true; i++) {
             if (next[i] == -1L) {
                 break;
             }
-            //Board.printBoard(next[i]);
+            //Helper.printBoard(next[i]);
         }
     }
 }
