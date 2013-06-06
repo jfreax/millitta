@@ -1,4 +1,7 @@
-package player.millitta;
+package player.millitta.Generate;
+
+import player.millitta.Board;
+import player.millitta.Constants;
 
 public class Generator implements Constants, algds.Constants {
 
@@ -40,13 +43,13 @@ public class Generator implements Constants, algds.Constants {
 
         // Flugphase //
         if( (board_ & (1L << BIT_PHASE)) != 0 && (board_ & (1L << (BIT_PHASE+1))) != 0) {
-            System.out.println("Generator: Flugphase");
+            System.out.println("Generate: Flugphase");
 
         // Setzphase //
         } else if ((board_ & (1L << BIT_PHASE)) != 0) {
             int rest = 9 - Board.getMyMenOnBoard(board_);
 
-            System.out.println("Generator: Setzphase");
+            System.out.println("Generate: Setzphase");
 
             if( action == SET_MAN ) { // Setzphase + Figur setzen
                 if ( rest <= 0 ) {
@@ -73,7 +76,7 @@ public class Generator implements Constants, algds.Constants {
             }
 
         } else { // Zugphase
-            System.out.println("Generator: Zugphase");
+            System.out.println("Generate: Zugphase");
         }
 
         nextBoards[boardPointer] = MAGIC_NO_BOARD;

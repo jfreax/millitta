@@ -1,4 +1,4 @@
-package player.millitta;
+package player.millitta.Search;
 
 import java.util.HashMap;
 import java.util.Map;

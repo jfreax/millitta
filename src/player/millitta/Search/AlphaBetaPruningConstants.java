@@ -1,4 +1,4 @@
-package player.millitta;
+package player.millitta.Search;
 
 
 public interface AlphaBetaPruningConstants {

@@ -1,5 +1,7 @@
-package player.millitta;
+package player.millitta.Evaluate;
 
+
+import player.millitta.Constants;
 
 public class Evaluate implements Constants {
 
