@@ -100,6 +100,10 @@ abstract public class AbstractGenerator implements Constants, algds.Constants {
     }
 
     public boolean isOppMenInMill(int pos) {
+        if ((board & (1L << BIT_PLAYER)) == 0) {
+            pos += 24;
+        }
+
         for( int mill : mills ) {
             if (Long.bitCount(board & mill) == 3) {
                 if ((mill & (1L << pos)) != 0 ) {
