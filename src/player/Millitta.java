@@ -7,7 +7,7 @@ import player.millitta.Generate.Generator;
 public class Millitta extends player.millitta.Millitta {
 
     public static void main(String[] args) {
-        long board = 9288675304800256L;
+        long board = 5066549580791808L;
         //board |= 1L << BIT_PHASE;
 
         //System.out.println("ok");
