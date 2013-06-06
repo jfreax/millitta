@@ -1,8 +1,9 @@
 package player;
 
 import player.millitta.Board;
-import player.millitta.Evaluate;
-import player.millitta.Generator;
+import player.millitta.Evaluate.Evaluate;
+import player.millitta.Generate.AbstractGenerator;
+import player.millitta.Generate.Generator;
 
 public class Millitta extends player.millitta.Millitta {
 
@@ -17,8 +18,10 @@ public class Millitta extends player.millitta.Millitta {
 
         Board.printBoard(board);
 
-        Generator gen = new Generator(board);
+        AbstractGenerator gen = Generator.get(board);
         long[] next = gen.getNextBoards();
+
+        System.out.println("Size: " + next.length);
 
         System.out.println("Now: " + board + " | Next: " + next[0]);
 
