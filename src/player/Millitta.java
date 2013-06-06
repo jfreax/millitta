@@ -3,11 +3,12 @@ package player;
 import player.millitta.Helper;
 import player.millitta.Generate.AbstractGenerator;
 import player.millitta.Generate.Generator;
+import player.millitta.Search.AlphaBetaPruning;
 
 public class Millitta extends player.millitta.Millitta {
 
     public static void main(String[] args) {
-        long board = 5066549580791808L;
+        long board = 5110530058485761L;
         //board |= 1L << BIT_PHASE;
 
         //System.out.println("ok");
@@ -16,21 +17,16 @@ public class Millitta extends player.millitta.Millitta {
 
         Helper.printBoard(board);
 
-        AbstractGenerator gen = Generator.get(board);
-        long[] next = gen.getNextBoards();
+        //AbstractGenerator gen = Generator.get(board);
+        //long[] next = gen.getNextBoards();
 
-        System.out.println("Size: " + next.length);
+        AlphaBetaPruning ab =  new AlphaBetaPruning(board, 20, 100);
+        long bestBoard = ab.getBestBoard();
 
-        System.out.println("Now: " + board + " | Next: " + next[0]);
+
+        System.out.println("Now: " + board + " | Next: " + bestBoard);
 
         System.out.println("Nexts:");
-        Helper.printBoard(next[0]);
-
-        for (int i = 0; true; i++) {
-            if (next[i] == -1L) {
-                break;
-            }
-            //Helper.printBoard(next[i]);
-        }
+        Helper.printBoard(bestBoard);
     }
 }

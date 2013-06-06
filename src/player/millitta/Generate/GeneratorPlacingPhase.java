@@ -8,7 +8,6 @@ public class GeneratorPlacingPhase extends AbstractGenerator {
     }
 
     public long[] getNextBoards() {
-        System.out.println("Generate: Setzphase");
         boardPointer = 0;
 
         int rest = 9 - getMyMenOnBoard();

@@ -5,6 +5,7 @@ import player.millitta.Evaluate.Evaluate;
 import player.millitta.Evaluate.Evaluator;
 import player.millitta.Generate.AbstractGenerator;
 import player.millitta.Generate.Generator;
+import player.millitta.Helper;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,7 +39,8 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
         long prevBestBoard = currentBestBoard;
         double prevBestBoardValue = currentBestBoardValue;
 
-        for (int depth = Math.min(2, maxDepth); depth <= maxDepth; depth += 2) {
+        for (int depth = Math.min(1, maxDepth); depth <= maxDepth; depth += 2) {
+            System.out.println("------- Start with depth: " + depth);
             double value = alphaBetaPruningSearch(board, NEG_INFINITY, INFINITY, 0, depth);
 
             if (Math.abs(value) == END_VALUE) {
@@ -49,17 +51,21 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
 
                 break;
             }
+            System.out.println("Current best: " + currentBestBoardValue);
+
 
             prevBestBoard = currentBestBoard;
             prevBestBoardValue = value;
         }
+
+        System.out.println("Abs best: " + currentBestBoardValue);
 
         return currentBestBoard;
 
     }
 
 
-    private double alphaBetaPruningSearch(long currentBoard, int alpha, int beta, int currentDepth, int remainingDepth) {
+    private double alphaBetaPruningSearch(long currentBoard, double alpha, double beta, int currentDepth, int remainingDepth) {
         if (System.currentTimeMillis() > endTime) {
             return END_VALUE;
         }
@@ -90,6 +96,10 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
         }
 
         if (remainingDepth == 0) {
+            System.out.println("Depth0: " + (currentBoard));
+
+            System.out.println("Depth0 fitness: " + (new Evaluate(currentBoard)).getFitness());
+            Helper.printBoard(currentBoard);
             return (new Evaluate(currentBoard)).getFitness();
         } else {
             long nodeBestBoard = MAGIC_NO_BOARD;
@@ -97,7 +107,17 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
 
             AbstractGenerator nextBoards = Generator.get(board);
             for (long nextBoard : nextBoards.getNextBoards()) {
-                double value = -alphaBetaPruningSearch(nextBoard, -beta, -alpha, currentDepth+1, remainingDepth-1);
+                if( nextBoard == MAGIC_NO_BOARD ) {
+                    break;
+                }
+
+                // TODO Toogle player
+                //nextBoard ^= (1L << BIT_PLAYER);
+
+                System.out.println("Board: " + currentBoard + " vs. next: " + nextBoard);
+
+                double value = alphaBetaPruningSearch(nextBoard, -beta, -alpha, currentDepth+1, remainingDepth-1);
+                //System.out.println("Value: " + value);
 
 
                 if (Math.abs(value) == END_VALUE) {
@@ -110,10 +130,10 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
                 }
 
                 if (value > alpha) {
-                    alpha = (int)(value);
+                    alpha = value;
 
                     if (currentDepth == 0) {
-                        currentBestBoard = currentBoard;
+                        currentBestBoard = nextBoard;
                         currentBestBoardValue = alpha;
                     }
                 }

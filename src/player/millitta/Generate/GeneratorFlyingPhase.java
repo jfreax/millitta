@@ -7,9 +7,8 @@ public class GeneratorFlyingPhase extends AbstractGenerator {
         super(board);
     }
 
-    @Override
+
     public long[] getNextBoards() {
-        System.out.println("Generate: Flugphase");
         boardPointer = 0;
 
         for (int i = 0; i < 24; i++) {

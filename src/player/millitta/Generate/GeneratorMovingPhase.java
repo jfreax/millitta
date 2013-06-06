@@ -9,7 +9,6 @@ public class GeneratorMovingPhase extends AbstractGenerator {
 
 
     public long[] getNextBoards() {
-        System.out.println("Generate: Zugphase");
         boardPointer = 0;
 
         for (int i = 0; i < 24; i++) {
