@@ -8,11 +8,11 @@ public class GeneratorPlacingPhase extends AbstractGenerator {
     }
 
     public long[] getNextBoards() {
-        int rest = 9 - getMyMenOnBoard();
-
         System.out.println("Generate: Setzphase");
+        boardPointer = 0;
 
         if( action == SET_MAN ) { // Figur setzen
+            int rest = 9 - getMyMenOnBoard();
             if ( rest <= 0 ) {
                 System.out.println("Something went wrong!\nGamephase says I have to set a man, but no men left to set :/");
                 return nextBoards;
@@ -23,7 +23,7 @@ public class GeneratorPlacingPhase extends AbstractGenerator {
             long mergedBoardPoints = (board & BITS_MENS1) | ((board & BITS_MENS2) >> 24);
             for( int i = 0; i < 24; i++ ) {
                 if ((mergedBoardPoints & (1L << i)) == 0) {
-                    nextBoards[boardPointer++] = setMan(i);
+                    nextBoards[boardPointer++] = setMyMan(i);
                 }
             }
         } else { // Figure rauskicken
