@@ -16,9 +16,18 @@ public interface Constants {
 
     int WEIGHT_OPEN_MILL = 0;
     int WEIGHT_CLOSED_MILL = 1;
+    int WEIGHT_MEN = 4;
 
-    long MAGIC_NO_BOARD = -1L; // kennzeichnet ein invaliden oder nicht existenten board status
-
+    static final double[] Weighting = {
+            1.0, // open mills
+            3.0, // closed mills
+            5.0, // Zwickmuehle
+            1.5, // Gabeln
+            1.2, // men
+            1.2, // rest
+            1.5, // moveable
+            1.0  // Kreuzungen
+    };
 
     /*
     Masks for all 16 mills.
@@ -74,6 +83,9 @@ public interface Constants {
             {23, 21},
             {15, 16, 22}
     };
+
+    /* Magics */
+    long MAGIC_NO_BOARD = -1L; // kennzeichnet ein invaliden oder nicht existenten board status
 
     /* Math constants */
     double LOG2 = Math.log(2);

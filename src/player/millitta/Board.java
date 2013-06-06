@@ -8,13 +8,13 @@ abstract public class Board implements Constants, algds.Constants {
         this.board = board;
     }
 
-    public int getMyMenOnBoard() {
-        return Helper.getMyMenOnBoard(board);
+    public int getFreePoss() {
+        return 24 - Long.bitCount((board & BITS_MENS1) | ((board & BITS_MENS2) >> 24));
     }
 
 
-    public int getFreePoss() {
-        return 24 - Long.bitCount((board & BITS_MENS1) | ((board & BITS_MENS2) >> 24));
+    public int getMyMenOnBoard() {
+        return Helper.getMyMenOnBoard(board);
     }
 
 
@@ -48,7 +48,7 @@ abstract public class Board implements Constants, algds.Constants {
     }
 
 
-    public int numberOfOppManOnBoard() {
+    public int getOppMenOnBoard() {
         return Long.bitCount(board & BITS_MENS2);
     }
 
@@ -77,7 +77,7 @@ abstract public class Board implements Constants, algds.Constants {
 
         // Wenn mehr als drei gegnerische Figuren auf dem Spielbrett sind,
         // dann darf die zu entfernende Figur nicht in einer Muehle sein.
-        if (numberOfOppManOnBoard() >= 3) {
+        if (getOppMenOnBoard() >= 3) {
             if (isOppMenInMill(pos)) {
                 return false;
             }

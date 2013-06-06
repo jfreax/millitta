@@ -26,13 +26,14 @@ public class Evaluator implements Constants {
             Evaluate eval = new Evaluate(nextBoard);
             double score = eval.getFitness();
 
-            System.out.println("Helper: " + nextBoard + " | Score: " + score);
-
             if( score > best ) {
                 best = score;
                 bestBoard = nextBoard;
             }
         }
+
+        System.out.println("Best board: " + bestBoard + " | Score: " + best);
+
 
         return bestBoard;
     }

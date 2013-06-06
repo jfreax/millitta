@@ -31,6 +31,7 @@ public class Evaluate extends Board {
 
         fitness += Weighting[WEIGHT_OPEN_MILL] * getOpenMills();
         fitness += Weighting[WEIGHT_CLOSED_MILL] * getClosedMills();
+        fitness += Weighting[WEIGHT_MEN] * getMyMenVsOppMen();
 
         return fitness;
     }
@@ -129,6 +130,11 @@ public class Evaluate extends Board {
 
 
         return doubleMills;
+    }
+
+
+    private double getMyMenVsOppMen() {
+        return (float)getMyMenOnBoard() / (float)getOppMenOnBoard();
     }
 
     private void calcBoardWithoutMills() {

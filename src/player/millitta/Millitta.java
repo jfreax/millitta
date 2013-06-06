@@ -33,7 +33,7 @@ public class Millitta extends Player implements Constants {
         long nextBoard = eval.getNextBoard();
 
 
-        setMessage("Helper: " + String.valueOf(board));
+        setMessage("Board: " + String.valueOf(board));
         setMessage("Next board: " + nextBoard);
 
         // Make the move!
