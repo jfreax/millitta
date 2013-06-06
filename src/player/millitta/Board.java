@@ -1,98 +1,112 @@
 package player.millitta;
 
 
-public class Board implements Constants {
+abstract public class Board implements Constants, algds.Constants {
+    protected long board;
 
-    static public int getMyMenOnBoard(long board) {
-        if ((board & (1L << BIT_PLAYER)) == 0L) {
-            return Long.bitCount(board & BITS_MENS1);
+    protected Board(long board) {
+        this.board = board;
+    }
+
+    public int getMyMenOnBoard() {
+        return Helper.getMyMenOnBoard(board);
+    }
+
+
+    public int getFreePoss() {
+        return 24 - Long.bitCount((board & BITS_MENS1) | ((board & BITS_MENS2) >> 24));
+    }
+
+
+    public long setMyMan(int at) {
+        if ((board & (1L << BIT_PLAYER)) != 0L) {
+            return board | (1L << (at + 24));
         } else {
-            return Long.bitCount(board & BITS_MENS2);
+            return board | (1L << at);
         }
     }
 
-    static public int playerOnPos(long board, int pos) {
-        if ((board & (1L << pos)) != 0) {
-            return 1;
-        } else if ((board & (1L << (pos + 24))) != 0) {
-            return 2;
+    public boolean isMyMen(int at) {
+        if ((board & (1L << BIT_PLAYER)) != 0L) {
+            return (board & (1L << (24 + at))) != 0L;
+        } else {
+            return (board & (1L << at)) != 0L;
         }
+    }
 
-        return 0;
+    public boolean isMen(int at) {
+        return (board & ((1L << (24 + at)) | (1L << at))) != 0L;
+    }
+
+
+    public long moveMyMen(int from, int to) {
+        if ((board & (1L << BIT_PLAYER)) != 0L) {
+            from += 24;
+            to += 24;
+        }
+        return (board | (1L << to)) & ~(1L << from);
+    }
+
+
+    public int numberOfOppManOnBoard() {
+        return Long.bitCount(board & BITS_MENS2);
+    }
+
+
+    /*
+        Entfernen einer Spielfigur des Gegners.
+        Testet nicht ob das ein valider Zug ist!
+    */
+    public long removeOppMan(int pos) {
+        if ((board & (1L << BIT_PLAYER)) == 0L) {
+            return board & ~(1L << (pos + 24));
+        } else {
+            return board & ~(1L << pos);
+        }
     }
 
     /*
-    0 ----------- 1 ----------- 2
-    |             |             |
-    |   8 ------- 9 ------ 10   |
-    |   |         |         |   |
-    |   |    16 - 17 - 18   |   |
-    |   |    |         |    |   |
-    7 - 15 - 23        19- 11 - 3
-    |   |    |         |    |   |
-    |   |    22 - 21 - 20   |   |
-    |   |         |         |   |
-    |   14 ------ 13 ----- 12   |
-    |             |             |
-    6 ----------- 5 ----------- 4
- */
-    // FIXME copy&paste was faster than thinking
-    static public void printBoard(long board) {
-        System.out.print(playerOnPos(board, 0));
-        System.out.print(" --------- ");
-        System.out.print(playerOnPos(board, 1));
-        System.out.print(" --------- ");
-        System.out.print(playerOnPos(board, 2));
+        Testet ob das entfernen einer gegnerisches Figur an Position pos
+        vom Spielbrett moeglich (erlaubt) ist.
+     */
+    public boolean isRemoveOppManPossible(int pos) {
+        // Wenn dort keine Figur steht, kann man sie auch nicht entfernen.
+        if (!isOppMen(pos)) {
+            return false;
+        }
 
-        System.out.print("\n|           |           |\n");
+        // Wenn mehr als drei gegnerische Figuren auf dem Spielbrett sind,
+        // dann darf die zu entfernende Figur nicht in einer Muehle sein.
+        if (numberOfOppManOnBoard() >= 3) {
+            if (isOppMenInMill(pos)) {
+                return false;
+            }
+        }
 
-        System.out.print("|   " + playerOnPos(board, 8));
-        System.out.print(" ----- ");
-        System.out.print(playerOnPos(board, 9));
-        System.out.print(" ----- ");
-        System.out.print(playerOnPos(board, 10));
+        return true;
+    }
 
-        System.out.print("   |\n|   |       |       |   |\n");
+    public boolean isOppMen(int at) {
+        if ((board & (1L << BIT_PLAYER)) == 0L) {
+            return (board & (1L << (24 + at))) != 0L;
+        } else {
+            return (board & (1L << at)) != 0L;
+        }
+    }
 
-        System.out.print("|   |   " + playerOnPos(board, 16));
-        System.out.print(" - ");
-        System.out.print(playerOnPos(board, 17));
-        System.out.print(" - ");
-        System.out.print(playerOnPos(board, 18));
+    public boolean isOppMenInMill(int pos) {
+        long tmpBoard = board;
+        if ((board & (1L << BIT_PLAYER)) == 0L) {
+            tmpBoard >>= 24;
+        }
 
-        System.out.print("   |   |\n|   |   |       |   |   |\n");
-
-        System.out.print(playerOnPos(board, 7) + " - ");
-        System.out.print(playerOnPos(board, 15) + " - ");
-        System.out.print(playerOnPos(board, 23) + "       ");
-
-        System.out.print(playerOnPos(board, 19) + " - ");
-        System.out.print(playerOnPos(board, 11) + " - ");
-        System.out.print(playerOnPos(board, 3));
-
-        System.out.print("\n|   |   |       |   |   |\n");
-        System.out.print("|   |   " + playerOnPos(board, 22));
-        System.out.print(" - ");
-        System.out.print(playerOnPos(board, 21));
-        System.out.print(" - ");
-        System.out.print(playerOnPos(board, 20));
-
-        System.out.print("   |   |\n|   |               |   |\n");
-
-
-        System.out.print("|   " + playerOnPos(board, 14));
-        System.out.print(" ----- ");
-        System.out.print(playerOnPos(board, 13));
-        System.out.print(" ----- ");
-        System.out.print(playerOnPos(board, 12));
-
-        System.out.print("   |\n|           |           |\n");
-
-        System.out.print(playerOnPos(board, 6));
-        System.out.print(" --------- ");
-        System.out.print(playerOnPos(board, 5));
-        System.out.print(" --------- ");
-        System.out.println(playerOnPos(board, 4));
-
+        for (int mill : mills) {
+            if (Long.bitCount(tmpBoard & mill) == 3) {
+                if ((mill & (1L << pos)) != 0L) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

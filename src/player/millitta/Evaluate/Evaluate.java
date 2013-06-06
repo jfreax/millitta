@@ -1,22 +1,10 @@
 package player.millitta.Evaluate;
 
 
-import player.millitta.Constants;
+import player.millitta.Board;
 
-public class Evaluate implements Constants {
+public class Evaluate extends Board {
 
-    private static final double[] Weighting = {
-            1.0, // open mills
-            3.0, // closed mills
-            5.0, // Zwickmuehle
-            1.5, // Gabeln
-            1.2, // men
-            1.2, // rest
-            1.5, // moveable
-            1.0  // Kreuzungen
-    };
-
-    private long boardState_ = 0L;
     /* board state for only the player to evaluate */
     private long playersBoard_ = 0L;
     private long boardWithoutMills = -1L;
@@ -27,11 +15,13 @@ public class Evaluate implements Constants {
            48 = Player ID to evaluate
         49-51 = Game phase
     */
-    public Evaluate(long boardState) {
-        this.boardState_ = playersBoard_ = boardState;
+    public Evaluate(long board) {
+        super(board);
 
-        if ((boardState_ & (1L << BIT_PLAYER)) != 0) {
-            playersBoard_ = boardState_ & ~(long) (Math.pow(2, 24) - 1); // Alles bis Bit 24 löschen
+        this.board = playersBoard_ = board;
+
+        if ((this.board & (1L << BIT_PLAYER)) != 0) {
+            playersBoard_ = this.board & ~(long) (Math.pow(2, 24) - 1); // Alles bis Bit 24 löschen
             playersBoard_ &= (long) (Math.pow(2, 48) - 1) >> 24; // Player 1 Daten auf Player 0 Datenposition verschieben
         }
     }
