@@ -24,9 +24,11 @@ abstract public class Board implements Constants, algds.Constants {
 
     public long setMyMan(int at) {
         if ((board & (1L << BIT_PLAYER)) != 0L) {
-            return board | (1L << (at + 24));
+            long rest = ((board >> BIT_REST2) | 15) - 1;
+            return (board | (1L << (at + 24))) | (rest << BIT_REST2);
         } else {
-            return board | (1L << at);
+            long rest = ((board >> BIT_REST1) | 15) - 1;
+            return (board | (1L << at)) | (rest << BIT_REST1);
         }
     }
 
