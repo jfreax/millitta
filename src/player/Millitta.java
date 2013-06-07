@@ -8,7 +8,8 @@ import player.millitta.Search.AlphaBetaPruning;
 public class Millitta extends player.millitta.Millitta {
 
     public static void main(String[] args) {
-        long board = 5110530058485761L;
+        //long board = 5110530058485761L;
+        long board = 5066549580791808L;
         //board |= 1L << BIT_PHASE;
 
         //System.out.println("ok");
@@ -20,13 +21,18 @@ public class Millitta extends player.millitta.Millitta {
         //AbstractGenerator gen = Generator.get(board);
         //long[] next = gen.getNextBoards();
 
-        AlphaBetaPruning ab =  new AlphaBetaPruning(board, 20, 100);
+        AlphaBetaPruning ab =  new AlphaBetaPruning(board, 1, 10);
         long bestBoard = ab.getBestBoard();
 
 
         System.out.println("Now: " + board + " | Next: " + bestBoard);
 
-        System.out.println("Nexts:");
+        System.out.println("Next:");
         Helper.printBoard(bestBoard);
+
+        long bitDiff = (board ^ bestBoard) & BITS_MENS;
+        int pos = (int) (Math.log(bitDiff) / LOG2);
+
+        System.out.println("Pos: " + pos);
     }
 }

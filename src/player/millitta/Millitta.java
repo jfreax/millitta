@@ -37,9 +37,10 @@ public class Millitta extends Player implements Constants {
         setMessage("Next board: " + nextBoard);
 
         // Make the move!
-        long bitDiff = board ^ nextBoard;
+        long bitDiff = (board ^ nextBoard) & BITS_MENS;
         if ((board & ((1L << BIT_ACTION))) != 0L) {
             int pos = (int) (Math.log(bitDiff) / LOG2);
+            setMessage("Set Man to: "+pos);
             pos = pos >= 24 ? pos - 24 : pos;
 
             if ((board & (1L << (BIT_ACTION + 1))) != 0L) { // Remove man
