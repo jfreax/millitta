@@ -87,11 +87,11 @@ abstract public class Board implements Constants, algds.Constants {
 
     protected long setMyMan(int at) {
         if ((board & (1L << BIT_PLAYER)) != 0L) {
-            long rest = ((board >> BIT_REST2) | 15) - 1;
-            return (board | (1L << (at + 24))) | (rest << BIT_REST2);
+            long rest = ((board >> BIT_REST2) & 15) - 1;
+            return ((board | (1L << (at + 24))) & ~(15L << BIT_REST2)) | (rest << BIT_REST2);
         } else {
-            long rest = ((board >> BIT_REST1) | 15) - 1;
-            return (board | (1L << at)) | (rest << BIT_REST1);
+            long rest = ((board >> BIT_REST1) & 15) - 1;
+            return ((board | (1L << at)) & ~(15L << BIT_REST1)) | (rest << BIT_REST1);
         }
     }
 
@@ -135,9 +135,9 @@ abstract public class Board implements Constants, algds.Constants {
 
     protected long getMyRest(long board) {
         if ((board & (1L << BIT_PLAYER)) == 0L) {
-            return (board >> BIT_REST1) | 15;
+            return (board >> BIT_REST1) & 15;
         } else {
-            return (board >> BIT_REST2) | 15;
+            return (board >> BIT_REST2) & 15;
         }
     }
 
