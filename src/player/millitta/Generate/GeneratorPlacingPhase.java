@@ -21,7 +21,16 @@ public class GeneratorPlacingPhase extends AbstractGenerator {
         long mergedBoardPoints = (board & BITS_MENS1) | ((board & BITS_MENS2) >> 24);
         for (int i = 0; i < 24; i++) {
             if ((mergedBoardPoints & (1L << i)) == 0) {
-                nextBoards[boardPointer++] = setMyMan(i);
+                // Setze Figur auf Spielbrett
+                long nextBoard = setMyMan(i);
+
+                // Wenn das jetzt eine geschlossene Muehle ist,
+                // dann bin ich immer noch an der Reihe,
+                // ansonsten muessen die Spieler gewechselt werden
+                if( !isMyMenInOpenMill(i) ) {
+                    nextBoard = switchPlayer(nextBoard);
+                }
+                nextBoards[boardPointer++] = nextBoard;
             }
         }
 

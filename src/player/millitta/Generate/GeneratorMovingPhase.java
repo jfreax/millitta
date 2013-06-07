@@ -1,6 +1,8 @@
 package player.millitta.Generate;
 
 
+import player.millitta.LookupTable;
+
 public class GeneratorMovingPhase extends AbstractGenerator {
 
     public GeneratorMovingPhase(long board) {
@@ -15,10 +17,18 @@ public class GeneratorMovingPhase extends AbstractGenerator {
             // Fuer jeden meiner Spielsteine
             if (isMyMen(i)) {
                 // Teste jede Nachbarposition ...
-                for (int neighbor : neighbors[i]) {
+                for (int neighbor : LookupTable.neighbors[i]) {
                     // ... ob sie noch frei ist.
                     if (!isMen(neighbor)) {
-                        nextBoards[boardPointer++] = moveMyMen(i, neighbor);
+                        long nextBoard = moveMyMen(i, neighbor);
+
+                        // Wenn das jetzt eine geschlossene Muehle ist,
+                        // dann bin ich immer noch an der Reihe,
+                        // ansonsten muessen die Spieler gewechselt werden
+                        if( !isMyMenInOpenMill(i) ) {
+                            nextBoard = switchPlayer(nextBoard);
+                        }
+                        nextBoards[boardPointer++] = nextBoard;
                     }
                 }
             }
