@@ -118,8 +118,13 @@ public class Millitta extends Player implements Constants {
         }
 
         // Anzahl noch zu setzender Spieler
-        board |= (countMyRest() << BIT_MY_REST);
-        board |= (countOppRest() << BIT_OPP_REST);
+        if( (board & (1L << BIT_PLAYER)) != 0L) { // Ich bin Spieler 2
+            board |= (countMyRest() << BIT_REST2);
+            board |= (countOppRest() << BIT_REST1);
+        } else {
+            board |= (countMyRest() << BIT_REST1);
+            board |= (countOppRest() << BIT_REST2);
+        }
 
         return board;
     }

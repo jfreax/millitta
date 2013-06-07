@@ -7,8 +7,8 @@ public interface Constants {
     long BIT_PHASE = 49;
     long BIT_ACTION = 52;
 
-    long BIT_MY_REST = 54;
-    long BIT_OPP_REST = 58;
+    long BIT_REST1 = 54;
+    long BIT_REST2 = 58;
 
     long BITS_MENS1 = 16777215L;
     long BITS_MENS2 = 281474959933440L;
