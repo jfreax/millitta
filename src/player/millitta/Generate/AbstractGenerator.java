@@ -6,7 +6,7 @@ import player.millitta.Helper;
 import player.millitta.Constants;
 
 abstract public class AbstractGenerator extends Board {
-    protected static long[] nextBoards = new long[100]; // TODO find max. size
+    protected long[] nextBoards = new long[100]; // TODO find max. size
     protected int boardPointer = 0;
 
 

@@ -9,7 +9,6 @@ public class GeneratorRemoveAction extends AbstractGenerator {
 
 
     public long[] getNextBoards() {
-        System.out.println("Generate: Remove");
         boardPointer = 0;
 
         boolean removed = false;

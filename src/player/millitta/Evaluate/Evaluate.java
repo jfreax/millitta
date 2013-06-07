@@ -39,7 +39,7 @@ public class Evaluate extends Board {
         fitness += Weighting[WEIGHT_CLOSED_MILL] * getClosedMills();
         fitness += Weighting[WEIGHT_MEN] * getMyMenVsOppMen();
 
-        System.out.println("Fitness: " + fitness + " | " + getOpenMills() + ", " + getClosedMills() + ", " + getMyMenVsOppMen());
+        //System.out.println("Fitness: " + fitness + " | " + getOpenMills() + ", " + getClosedMills() + ", " + getMyMenVsOppMen());
 
         return fitness;
     }

@@ -1,6 +1,8 @@
 package player.millitta.Generate;
 
 
+import player.millitta.Helper;
+
 public class GeneratorPlacingPhase extends AbstractGenerator {
 
     public GeneratorPlacingPhase(long board) {
@@ -10,8 +12,8 @@ public class GeneratorPlacingPhase extends AbstractGenerator {
     public long[] getNextBoards() {
         boardPointer = 0;
 
-        int rest = 9 - getMyMenOnBoard();
-        if (rest <= 0) {
+        int maxRest = 9 - getMyMenOnBoard();
+        if (maxRest <= 0) {
             System.out.println("Something went wrong!\nGamephase says I have to set a man, but no men left to set :/");
             return nextBoards;
         }

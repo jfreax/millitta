@@ -39,19 +39,19 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
         long prevBestBoard = currentBestBoard;
         double prevBestBoardValue = currentBestBoardValue;
 
-        for (int depth = Math.min(1, maxDepth); depth <= maxDepth; depth += 2) {
+        for (int depth = Math.min(2, maxDepth); depth <= maxDepth; depth += 2) {
             System.out.println("------- Start with depth: " + depth);
             double value = alphaBetaPruningSearch(board, NEG_INFINITY, INFINITY, 0, depth);
 
-            if (Math.abs(value) == END_VALUE) {
+            //if (Math.abs(value) == END_VALUE) {
                 if (currentBestBoardValue <= prevBestBoardValue) {
                     currentBestBoard = prevBestBoard;
                     currentBestBoardValue = prevBestBoardValue;
                 }
 
-                break;
-            }
-            System.out.println("Current best: " + currentBestBoardValue);
+            //    break;
+            //}
+            //System.out.println("Current best: " + currentBestBoardValue);
 
 
             prevBestBoard = currentBestBoard;
@@ -88,64 +88,88 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
                     || alpha >= beta) {
                 if (currentDepth == 0) {
                     // TODO currentBestMove = get best move from boardComputed;
-                    currentBestBoardValue = boardValue;
+                    //currentBestBoardValue = boardValue;
                 }
 
                 return boardValue;
             }
         }
 
+        // Maximale Tiefe erreicht
+        // Rueckgabe der Fitness dieses Knotens
         if (remainingDepth == 0) {
-            System.out.println("Depth0: " + (currentBoard));
+            //System.out.println("Depth0: " + (currentBoard));
+            //System.out.println("Depth0 fitness: " + (new Evaluate(currentBoard)).getFitness());
+            //Helper.printBoard(currentBoard);
 
-            System.out.println("Depth0 fitness: " + (new Evaluate(currentBoard)).getFitness());
-            Helper.printBoard(currentBoard);
             return (new Evaluate(currentBoard)).getFitness();
         } else {
             long nodeBestBoard = MAGIC_NO_BOARD;
             double nodeBestValue = NEG_INFINITY;
 
-            AbstractGenerator nextBoards = Generator.get(board);
-            for (long nextBoard : nextBoards.getNextBoards()) {
+            // Hole alle moeglichen naechsten Spielzuege
+            AbstractGenerator nextBoardsGenerator = Generator.get(currentBoard);
+            long[] nextBoards = nextBoardsGenerator.getNextBoards();
+
+            // Keine weiteren Spielzuege mehr vorhanden
+            if( nextBoards[0] == MAGIC_NO_BOARD) {
+                return (new Evaluate(currentBoard)).getFitness();
+            }
+
+            // Ergebnis vom rekursiven Aufruf
+            double value;
+
+            // Für jedes moegliche Nachfolgespielbrett...
+            for (long nextBoard : nextBoards) {
                 if( nextBoard == MAGIC_NO_BOARD ) {
                     break;
                 }
 
-                // TODO Toogle player
-                //nextBoard ^= (1L << BIT_PLAYER);
+                // Wenn das Spielbrett fuer den zu maximierenden Spieler ist
+                if( isMaxPlayer(currentBoard)) {
+                    value = alphaBetaPruningSearch(nextBoard, alpha, beta, currentDepth+1, remainingDepth-1);
+                    if( value > alpha) {
+                        alpha = value;
 
-                System.out.println("Board: " + currentBoard + " vs. next: " + nextBoard);
-
-                double value = alphaBetaPruningSearch(nextBoard, -beta, -alpha, currentDepth+1, remainingDepth-1);
-                //System.out.println("Value: " + value);
-
-
-                if (Math.abs(value) == END_VALUE) {
-                    return END_VALUE;
-                }
-
-                if (value > nodeBestValue) {
-                    nodeBestValue = value;
-                    nodeBestBoard = nextBoard; // for transposition table
-                }
-
-                if (value > alpha) {
-                    alpha = value;
-
-                    if (currentDepth == 0) {
-                        currentBestBoard = nextBoard;
-                        currentBestBoardValue = alpha;
+                        // Obersten Knoten als den momentan besten merken
+                        if ( currentDepth == 0 ) {
+                            currentBestBoard = nextBoard;
+                            currentBestBoardValue = value;
+                        }
                     }
+
+                    if (value > nodeBestValue) {
+                        nodeBestValue = value;
+                        nodeBestBoard = nextBoard;
+                    }
+
+                } else {
+                    beta = Math.min(beta, alphaBetaPruningSearch(nextBoard, alpha, beta, currentDepth+1, remainingDepth-1));
                 }
 
-                if (alpha >= beta) {
+                // Cut-off
+                if ( beta <= alpha ) {
                     break;
                 }
             }
 
+            return nodeBestValue;
+
+//            if( isMaxPlayer(currentBoard)) {
+//                System.out.println("Alpha: " + alpha);
+//                return alpha; // Alpha Cut-off
+//            } else {
+//                System.out.println("Beta: " + beta);
+//                return  beta; // Beta Cut-off
+            //}
+
             //transpositionTable.put(currentBoard.getBoardID(), new BoardStateValue(nodeBestValue, remainingDepth, nodeBestMove, alpha >= beta, nodeBestValue < alpha));
 
-            return nodeBestValue;
+            //return nodeBestValue;
         }
+    }
+
+    private boolean isMaxPlayer(long nextBoard) {
+        return (board & (1L << BIT_PLAYER)) == (nextBoard & (1L << BIT_PLAYER));
     }
 }
