@@ -68,14 +68,16 @@ public class Millitta extends Player implements Constants {
     }
 
     private long getBoardLong() {
-        System.out.println("getBoardLong");
+        // Reset board
         long board = 0L;
         int[] boardArray = getBoard();
 
+        // Speichere aktiven Spieler
         if (getMyColor() == BLACK) {
             board = 1L << BIT_PLAYER;
         }
 
+        // Positionen der Spielfiguren
         for (int i = 0; i < 24; ++i) {
             switch (boardArray[i]) {
                 case BLACK:
@@ -89,6 +91,7 @@ public class Millitta extends Player implements Constants {
             }
         }
 
+        // Aktion und Spielphase
         switch (getAction()) {
             case SET_MAN:
                 board |= 1L << BIT_PHASE; // Setzphase
@@ -113,6 +116,10 @@ public class Millitta extends Player implements Constants {
                 // BIT_PHASE => 0
             }
         }
+
+        // Anzahl noch zu setzender Spieler
+        board |= (countMyRest() << BIT_MY_REST);
+        board |= (countOppRest() << BIT_OPP_REST);
 
         return board;
     }
