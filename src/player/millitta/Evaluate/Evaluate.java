@@ -2,6 +2,7 @@ package player.millitta.Evaluate;
 
 
 import player.millitta.Board;
+import player.millitta.Helper;
 import player.millitta.LookupTable;
 
 public class Evaluate extends Board {
@@ -27,19 +28,19 @@ public class Evaluate extends Board {
         playersBoard_ = this.board;
 
         if ((this.board & (1L << BIT_PLAYER)) != 0) {
-            playersBoard_ = this.board & ~(long) (Math.pow(2, 24) - 1); // Alles bis Bit 24 löschen
-            playersBoard_ &= (long) (Math.pow(2, 48) - 1) >> 24; // Player 1 Daten auf Player 0 Datenposition verschieben
+            playersBoard_ = board & ~((long) (Math.pow(2, 24) - 1)); // Alles bis Bit 24 löschen
+            playersBoard_ |= board >> 24; // Player 1 Daten auf Player 0 Datenposition verschieben
         }
     }
 
     public double getFitness() {
         double fitness = 0.f;
 
-        fitness += Weighting[WEIGHT_OPEN_MILL] * getOpenMills();
-        fitness += Weighting[WEIGHT_CLOSED_MILL] * getClosedMills();
-        fitness += Weighting[WEIGHT_MEN] * getMyMenVsOppMen();
+        //fitness += Weighting[WEIGHT_OPEN_MILL] * getOpenMills();
+        //fitness += Weighting[WEIGHT_CLOSED_MILL] * getClosedMills();
+        //fitness += Weighting[WEIGHT_MEN] * getMyMenVsOppMen();
 
-        //System.out.println("Fitness: " + fitness + " | " + getOpenMills() + ", " + getClosedMills() + ", " + getMyMenVsOppMen());
+        System.out.println("Fitness: " + fitness + " | " + getOpenMills() + ", " + getClosedMills() + ", " + getMyMenVsOppMen());
 
         return fitness;
     }
@@ -57,6 +58,10 @@ public class Evaluate extends Board {
     private int getClosedMills() {
         int closedMills = 0;
         boardWithoutMills = playersBoard_;
+
+        //System.out.println("==>");
+        //Helper.printBoard(playersBoard_);
+        //System.out.println("<==");
 
         for (int mill : LookupTable.mills) {
             if (Long.bitCount(playersBoard_ & mill) == 3) {
@@ -84,8 +89,12 @@ public class Evaluate extends Board {
 
         calcBoardWithoutMills();
 
+        //System.out.println("-->");
+        //Helper.printBoard(boardWithoutMills);
+        //System.out.println("<--");
+
         for (int mill : LookupTable.mills) {
-            if (Long.bitCount(playersBoard_ & mill) == 2) {
+            if (Long.bitCount(boardWithoutMills & mill) == 2) {
                 if ((playersBoard_ ^ mask_move_phase) == 0) { // Zugphase
                     openMills++;
                 } else { // Angrenzend bewegbarer Stein, der nicht in einer Mühle ist
