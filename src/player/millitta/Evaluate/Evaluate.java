@@ -20,7 +20,7 @@ public class Evaluate extends Board {
     public Evaluate(long board) {
         super(board);
 
-        // Spieler muss getauscht werden, da dies ja das Board für die naechste Runde ist, aber
+        // Spieler muss getauscht werden, da dies ja das Board fuer die naechste Runde ist, aber
         // die Auswertung noch fuer diesen stattfinden soll.
         this.board = switchPlayer(this.board);
 
@@ -28,7 +28,7 @@ public class Evaluate extends Board {
         playersBoard_ = this.board;
 
         if ((this.board & (1L << BIT_PLAYER)) != 0) {
-            playersBoard_ = board & ~((long) (Math.pow(2, 24) - 1)); // Alles bis Bit 24 löschen
+            playersBoard_ = board & ~((long) (Math.pow(2, 24) - 1)); // Alles bis Bit 24 loeschen
             playersBoard_ |= board >> 24; // Player 1 Daten auf Player 0 Datenposition verschieben
         }
     }
@@ -38,18 +38,19 @@ public class Evaluate extends Board {
 
         fitness += Weighting[WEIGHT_OPEN_MILL] * getOpenMills();
         fitness += Weighting[WEIGHT_CLOSED_MILL] * getClosedMills();
+        fitness += Weighting[WEIGHT_DOUBLE_MILL] * getDoubleMills();
         fitness += Weighting[WEIGHT_MEN] * getMyMenVsOppMen();
 
-        System.out.println("Fitness: " + fitness + " | OM: " + getOpenMills() + ", CM:" + getClosedMills() +
-                ", MvsO" + getMyMenVsOppMen());
+        System.out.println("Fitness: " + fitness + " | OM: " + getOpenMills() + ", CM: " + getClosedMills() +
+                ", Mvs: " + getMyMenVsOppMen() + ", ZM: " + getDoubleMills() );
 
         return fitness;
     }
 
     /*
-        Es existieren insgesamt 16 moegliche Mühlen.
-        Für jede Muehle wird eine 24 Bit-Maske angelegt und die entsprechenden Bits gemaeß des Spielfeldes gesetzt.
-        Auf diese Masken kann dann eine logische UND-Verknüpfung mit den Bits der gesetzten Steine
+        Es existieren insgesamt 16 moegliche Muehlen.
+        Fuer jede Muehle wird eine 24 Bit-Maske angelegt und die entsprechenden Bits gemaess des Spielfeldes gesetzt.
+        Auf diese Masken kann dann eine logische UND-Verknuepfung mit den Bits der gesetzten Steine
         des entsprechenden Spielers angewandt werden.
 
         Sind bei einer Maske noch 3 Bits gesetzt, so hat der Spieler dort eine geschlossene Muehle.
@@ -59,10 +60,6 @@ public class Evaluate extends Board {
     private int getClosedMills() {
         int closedMills = 0;
         boardWithoutMills = playersBoard_;
-
-        //System.out.println("==>");
-        //Helper.printBoard(playersBoard_);
-        //System.out.println("<==");
 
         for (int mill : LookupTable.mills) {
             if (Long.bitCount(playersBoard_ & mill) == 3) {
@@ -75,31 +72,24 @@ public class Evaluate extends Board {
     }
 
     /*
-        Genau wie beim Erkennen der geschlossenen Mühlen werden hier die Steine des Spielers mit allen 16 Masken
-        logisch mit UND-Verknüpft. Eine offene Mühle liegt genau dann vor,
-        wenn 2 Bits in einer verknüpften Maske noch gesetzt sind.
+        Genau wie beim Erkennen der geschlossenen Muehlen werden hier die Steine des Spielers mit allen 16 Masken
+        logisch mit UND-Verknuepft. Eine offene Muehle liegt genau dann vor,
+        wenn 2 Bits in einer verknuepften Maske noch gesetzt sind.
 
         Solange der auszuwertende Spieler noch Steine zum Setzen hat oder springen kann,
-        reicht diese Bedingung schon aus. Ansonsten muss geprüft werden, ob ein angrenzedes Feld zu dem Feld,
-        in dem der Stein zur fertigen Mühle fehlt, auch ein Stein des selben Spielers liegt.
-        Dieser Stein darf dann natürlich nicht selber schon Teil der gerade betrachteten offenen Mühle sein.
+        reicht diese Bedingung schon aus. Ansonsten muss geprueft werden, ob ein angrenzedes Feld zu dem Feld,
+        in dem der Stein zur fertigen Muehle fehlt, auch ein Stein des selben Spielers liegt.
+        Dieser Stein darf dann natuerlich nicht selber schon Teil der gerade betrachteten offenen Muehle sein.
      */
     private int getOpenMills() {
         int openMills = 0;
-        final long mask_move_phase = 4L << BIT_PHASE; // 0b100
-
-        calcBoardWithoutMills();
-
-        //System.out.println("-->");
-        //Helper.printBoard(boardWithoutMills);
-        //System.out.println("<--");
 
         for (int mill : LookupTable.mills) {
-            if (Long.bitCount(boardWithoutMills & mill) == 2) {
-                if ((playersBoard_ ^ mask_move_phase) == 0) { // Zugphase
+            if (Long.bitCount(playersBoard_ & mill) == 2) {
+                if ((playersBoard_ & (1L << BIT_PHASE)) != 0) { // Setz oder Flugphase
                     openMills++;
-                } else { // Angrenzend bewegbarer Stein, der nicht in einer Mühle ist
-                    long holePos = Math.round(Math.log(playersBoard_ ^ mill) / LOG2);
+                } else { // Angrenzend bewegbarer Stein, der nicht in einer Muehle ist
+                    long holePos = Math.round(Math.log((playersBoard_ & mill) ^ mill) / LOG2);
                     long boardWithoutOpenAndClosedMills = boardWithoutMills & ~(mill);
 
                     long nextPos = holePos + 1;
@@ -111,7 +101,7 @@ public class Evaluate extends Board {
                     }
 
                     // Davor oder danach liegt noch ein Stein, der weder in einer geschlossenen
-                    // Mühle, noch in genau der offenen die wir uns gerade angucken, liegt.
+                    // Muehle, noch in genau der offenen die wir uns gerade angucken, liegt.
                     if ((boardWithoutOpenAndClosedMills & ((1L << prevPos) | (1L << nextPos))) != 0) {
                         openMills++;
                         continue; // mehr anliegende Steine brauchen wir uns hier nicht anschauen
@@ -140,11 +130,33 @@ public class Evaluate extends Board {
     }
 
     /*
-        Erweiterung des Algorithmus zum erkennen von offenen Mühlen.
-        Hier muss nur der angrenzende Stein selbst schon in einer Mühle sein.
+        Erweiterung des Algorithmus zum erkennen von offenen Muehlen.
+        Hier muss nur der angrenzende Stein selbst schon in einer Muehle sein.
      */
     private int getDoubleMills() {
         int doubleMills = 0;
+
+        for (int mill : LookupTable.mills) {
+            // Offene Muehle
+            if (Long.bitCount(playersBoard_ & mill) == 2) {
+                // Position des fehlenden Steines
+                int holePos = (int)Math.round(Math.log((playersBoard_ & mill) ^ mill) / LOG2);
+
+                // Fuer jeden Nachbarn davon
+                for( int neighbor : LookupTable.neighbors[holePos] ) {
+                    // Der Nachbar darf nicht mit in der selben (offenen) Muehle sein
+                    if( (mill & (1L << neighbor)) == 0L ) {
+                        for (int mill2 : LookupTable.millAt[neighbor]) {
+                            // Ist der Nachbar dann Teil einer Muehle, so haben wir hier eine Zwickmuehle :)
+                            if (Long.bitCount(playersBoard_ & mill2) == 3) {
+                                doubleMills++;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
 
         return doubleMills;

@@ -20,6 +20,7 @@ public interface Constants {
 
     int WEIGHT_OPEN_MILL = 0;
     int WEIGHT_CLOSED_MILL = 1;
+    int WEIGHT_DOUBLE_MILL = 2;
     int WEIGHT_MEN = 4;
 
     static final double[] Weighting = {
