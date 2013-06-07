@@ -2,6 +2,7 @@ package player.millitta.Evaluate;
 
 
 import player.millitta.Board;
+import player.millitta.LookupTable;
 
 public class Evaluate extends Board {
 
@@ -18,7 +19,12 @@ public class Evaluate extends Board {
     public Evaluate(long board) {
         super(board);
 
-        this.board = playersBoard_ = board;
+        // Spieler muss getauscht werden, da dies ja das Board für die naechste Runde ist, aber
+        // die Auswertung noch fuer diesen stattfinden soll.
+        this.board = switchPlayer(this.board);
+
+
+        playersBoard_ = this.board;
 
         if ((this.board & (1L << BIT_PLAYER)) != 0) {
             playersBoard_ = this.board & ~(long) (Math.pow(2, 24) - 1); // Alles bis Bit 24 löschen
@@ -52,7 +58,7 @@ public class Evaluate extends Board {
         int closedMills = 0;
         boardWithoutMills = playersBoard_;
 
-        for (int mill : mills) {
+        for (int mill : LookupTable.mills) {
             if (Long.bitCount(playersBoard_ & mill) == 3) {
                 closedMills++;
                 boardWithoutMills &= ~(mill);
@@ -78,7 +84,7 @@ public class Evaluate extends Board {
 
         calcBoardWithoutMills();
 
-        for (int mill : mills) {
+        for (int mill : LookupTable.mills) {
             if (Long.bitCount(playersBoard_ & mill) == 2) {
                 if ((playersBoard_ ^ mask_move_phase) == 0) { // Zugphase
                     openMills++;
