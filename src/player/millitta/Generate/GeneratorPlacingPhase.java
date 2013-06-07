@@ -24,12 +24,9 @@ public class GeneratorPlacingPhase extends AbstractGenerator {
                 // Setze Figur auf Spielbrett
                 long nextBoard = setMyMan(i);
 
-                // Wenn das jetzt eine geschlossene Muehle ist,
-                // dann bin ich immer noch an der Reihe,
-                // ansonsten muessen die Spieler gewechselt werden
-                if( !isMyMenInOpenMill(i) ) {
-                    nextBoard = switchPlayer(nextBoard);
-                }
+                nextBoard = changePlayerIfNecessary(nextBoard, i);
+                nextBoard = getBoardWithNewPhase(nextBoard);
+
                 nextBoards[boardPointer++] = nextBoard;
             }
         }

@@ -25,7 +25,13 @@ public class GeneratorRemoveAction extends AbstractGenerator {
         if (!removed) {
             for (int i = 0; i < 24; i++) {
                 if (isOppMen(i)) {
-                    nextBoards[boardPointer++] = removeOppMan(i);
+                    long nextBoard = removeOppMan(i);
+
+                    nextBoard = switchPlayer(nextBoard);
+                    nextBoard = setNoAction(nextBoard);
+                    nextBoard = getBoardWithNewPhase(nextBoard);
+
+                    nextBoards[boardPointer++] = nextBoard;
                 }
             }
         }

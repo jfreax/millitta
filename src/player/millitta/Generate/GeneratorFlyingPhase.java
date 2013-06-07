@@ -20,13 +20,10 @@ public class GeneratorFlyingPhase extends AbstractGenerator {
                     if (!isMen(j)) {
                         long nextBoard = moveMyMen(i, j);
 
-                        // Wenn das jetzt eine geschlossene Muehle ist,
-                        // dann bin ich immer noch an der Reihe,
-                        // ansonsten muessen die Spieler gewechselt werden
-                        if( !isMyMenInOpenMill(i) ) {
-                            nextBoard = switchPlayer(nextBoard);
-                        }
-                        nextBoards[boardPointer++] = moveMyMen(i, j);
+                        nextBoard = changePlayerIfNecessary(nextBoard, j);
+                        nextBoard = getBoardWithNewPhase(nextBoard);
+
+                        nextBoards[boardPointer++] = nextBoard;
                     }
                 }
             }

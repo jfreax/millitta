@@ -22,12 +22,9 @@ public class GeneratorMovingPhase extends AbstractGenerator {
                     if (!isMen(neighbor)) {
                         long nextBoard = moveMyMen(i, neighbor);
 
-                        // Wenn das jetzt eine geschlossene Muehle ist,
-                        // dann bin ich immer noch an der Reihe,
-                        // ansonsten muessen die Spieler gewechselt werden
-                        if( !isMyMenInOpenMill(i) ) {
-                            nextBoard = switchPlayer(nextBoard);
-                        }
+                        nextBoard = changePlayerIfNecessary(nextBoard, neighbor);
+                        nextBoard = getBoardWithNewPhase(nextBoard);
+
                         nextBoards[boardPointer++] = nextBoard;
                     }
                 }
