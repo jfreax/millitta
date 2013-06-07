@@ -12,6 +12,10 @@ abstract public class Board implements Constants, algds.Constants {
         return 24 - Long.bitCount((board & BITS_MENS1) | ((board & BITS_MENS2) >> 24));
     }
 
+    public long switchPlayer(long board) {
+        return board ^ (1L << BIT_PLAYER);
+    }
+
 
     public int getMyMenOnBoard() {
         return Helper.getMyMenOnBoard(board);
