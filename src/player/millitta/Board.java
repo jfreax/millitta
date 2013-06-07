@@ -34,6 +34,22 @@ abstract public class Board implements Constants, algds.Constants {
         }
     }
 
+    public boolean isMyMenInOpenMill(int at) {
+        long tmpBoard = board;
+        if ((board & (1L << BIT_PLAYER)) != 0L) {
+            tmpBoard >>= 24;
+        }
+
+        for( int mill : LookupTable.millAt[at] ) {
+            if (Long.bitCount(tmpBoard & mill) == 3) {
+                if ((mill & (1L << at)) != 0L) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean isMen(int at) {
         return (board & ((1L << (24 + at)) | (1L << at))) != 0L;
     }
@@ -100,7 +116,7 @@ abstract public class Board implements Constants, algds.Constants {
             tmpBoard >>= 24;
         }
 
-        for (int mill : mills) {
+        for (int mill : LookupTable.millAt[pos]) {
             if (Long.bitCount(tmpBoard & mill) == 3) {
                 if ((mill & (1L << pos)) != 0L) {
                     return true;
