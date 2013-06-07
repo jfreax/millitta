@@ -8,6 +8,63 @@ abstract public class Board implements Constants, algds.Constants {
         this.board = board;
     }
 
+    /************************
+     *  Aktionen und Phasen *
+     ************************/
+    public long setRemoveAction(long board) {
+        return board | (1L << BIT_ACTION) | (1L << (BIT_ACTION + 1));
+    }
+
+    public long setNoAction(long board) {
+        return board & ~((1L << BIT_ACTION) | (1L << (BIT_ACTION + 1)));
+    }
+
+    /*
+        Wenn das positionieren einer Spielfigur auf Position 'at' jetzt eine geschlossene Muehle wird,
+        dann bin ich immer noch an der Reihe, ansonsten muessen die Spieler gewechselt werden.
+        Achtung: Passt auch automatisch die Aktion auf "Remove" an wenn es sein muss.
+    */
+    public long changePlayerIfNecessary(long board, int at) {
+
+        if( !isMyMenInOpenMill(at) ) {
+            board = switchPlayer(board);
+            board = setNoAction(board);
+        } else { // Naechse Aktion ist jemanden vom Board zu kicken
+            board = setRemoveAction(board);
+        }
+        return board;
+    }
+
+    /*
+        Speichert die neue Spielphase im Board ab.
+
+        Achtung: Muss aufgerufen werden, nachdem neuer Zug schon ausgefuehrt wurde und
+                 ggf. auch schon die Spieler IDs getauscht wurden.
+                 (aka nach 'changePlayerIfNecessary')
+    */
+    public long getBoardWithNewPhase(long board) {
+        // Es sind noch Spielfiguren zu setzen
+        //   -> Setzphase
+        if( getMyRest(board) > 0 ) {
+            board |=  (1L <<  BIT_PHASE);
+            board &= ~(1L << (BIT_PHASE+1));
+
+        // 3 oder weniger Spieler noch auf dem Board und nicht in der Setzphase
+        //   -> Flugphase
+        } else if ( getMyMenOnBoard(board) <= 3 ) {
+            board |= (1L <<  BIT_PHASE) | (1L << (BIT_PHASE+1));
+        } else { // Zugphase
+            board &= ~( (1L <<  BIT_PHASE) | (1L << (BIT_PHASE+1)));
+        }
+
+
+        return board;
+    }
+
+
+    /************************
+     *  Spieler unabhaengig *
+     ************************/
     public int getFreePoss() {
         return 24 - Long.bitCount((board & BITS_MENS1) | ((board & BITS_MENS2) >> 24));
     }
@@ -17,12 +74,18 @@ abstract public class Board implements Constants, algds.Constants {
     }
 
 
-    public int getMyMenOnBoard() {
+    /*********************************
+     *  Spieler der an der Reihe ist *
+     *********************************/
+    protected int getMyMenOnBoard() {
         return Helper.getMyMenOnBoard(board);
     }
 
+    protected int getMyMenOnBoard(long board) {
+        return Helper.getMyMenOnBoard(board);
+    }
 
-    public long setMyMan(int at) {
+    protected long setMyMan(int at) {
         if ((board & (1L << BIT_PLAYER)) != 0L) {
             long rest = ((board >> BIT_REST2) | 15) - 1;
             return (board | (1L << (at + 24))) | (rest << BIT_REST2);
@@ -32,7 +95,7 @@ abstract public class Board implements Constants, algds.Constants {
         }
     }
 
-    public boolean isMyMen(int at) {
+    protected boolean isMyMen(int at) {
         if ((board & (1L << BIT_PLAYER)) != 0L) {
             return (board & (1L << (24 + at))) != 0L;
         } else {
@@ -40,7 +103,7 @@ abstract public class Board implements Constants, algds.Constants {
         }
     }
 
-    public boolean isMyMenInOpenMill(int at) {
+    protected boolean isMyMenInOpenMill(int at) {
         long tmpBoard = board;
         if ((board & (1L << BIT_PLAYER)) != 0L) {
             tmpBoard >>= 24;
@@ -56,12 +119,12 @@ abstract public class Board implements Constants, algds.Constants {
         return false;
     }
 
-    public boolean isMen(int at) {
+    protected boolean isMen(int at) {
         return (board & ((1L << (24 + at)) | (1L << at))) != 0L;
     }
 
 
-    public long moveMyMen(int from, int to) {
+    protected long moveMyMen(int from, int to) {
         if ((board & (1L << BIT_PLAYER)) != 0L) {
             from += 24;
             to += 24;
@@ -70,7 +133,19 @@ abstract public class Board implements Constants, algds.Constants {
     }
 
 
-    public int getOppMenOnBoard() {
+    protected long getMyRest(long board) {
+        if ((board & (1L << BIT_PLAYER)) == 0L) {
+            return (board >> BIT_REST1) | 15;
+        } else {
+            return (board >> BIT_REST2) | 15;
+        }
+    }
+
+
+    /******************
+     *  Gegenspieler *
+     *****************/
+    protected int getOppMenOnBoard() {
         return Long.bitCount(board & BITS_MENS2);
     }
 
@@ -79,7 +154,7 @@ abstract public class Board implements Constants, algds.Constants {
         Entfernen einer Spielfigur des Gegners.
         Testet nicht ob das ein valider Zug ist!
     */
-    public long removeOppMan(int pos) {
+    protected long removeOppMan(int pos) {
         if ((board & (1L << BIT_PLAYER)) == 0L) {
             return board & ~(1L << (pos + 24));
         } else {
@@ -91,7 +166,7 @@ abstract public class Board implements Constants, algds.Constants {
         Testet ob das entfernen einer gegnerisches Figur an Position pos
         vom Spielbrett moeglich (erlaubt) ist.
      */
-    public boolean isRemoveOppManPossible(int pos) {
+    protected boolean isRemoveOppManPossible(int pos) {
         // Wenn dort keine Figur steht, kann man sie auch nicht entfernen.
         if (!isOppMen(pos)) {
             return false;
@@ -108,7 +183,7 @@ abstract public class Board implements Constants, algds.Constants {
         return true;
     }
 
-    public boolean isOppMen(int at) {
+    protected boolean isOppMen(int at) {
         if ((board & (1L << BIT_PLAYER)) == 0L) {
             return (board & (1L << (24 + at))) != 0L;
         } else {
@@ -116,7 +191,7 @@ abstract public class Board implements Constants, algds.Constants {
         }
     }
 
-    public boolean isOppMenInMill(int pos) {
+    protected boolean isOppMenInMill(int pos) {
         long tmpBoard = board;
         if ((board & (1L << BIT_PLAYER)) == 0L) {
             tmpBoard >>= 24;
