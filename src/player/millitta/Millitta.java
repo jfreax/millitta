@@ -90,6 +90,7 @@ public class Millitta extends Player implements Constants {
                     break;
             }
         }
+        setMessage("First first board: " + board);
 
         // Aktion und Spielphase
         switch (getAction()) {

@@ -15,7 +15,7 @@ public class Evaluator implements Constants {
 
     public long getNextBoard() {
 
-        AlphaBetaPruning ab =  new AlphaBetaPruning(board, 20, 1000);
+        AlphaBetaPruning ab =  new AlphaBetaPruning(board, 8, 10000);
 
         long bestBoard = ab.getBestBoard();
 

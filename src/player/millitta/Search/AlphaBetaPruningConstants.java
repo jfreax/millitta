@@ -7,8 +7,8 @@ public interface AlphaBetaPruningConstants {
     int BIT_HAS_CUT = 32;
     int BIT_CAN_CUT_DEEPER = 33;
 
-    int END_VALUE = Integer.MAX_VALUE;
-
     int INFINITY = Integer.MAX_VALUE;
     int NEG_INFINITY = Integer.MIN_VALUE;
+
+    int END_VALUE = -5000;
 }

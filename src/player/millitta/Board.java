@@ -11,11 +11,15 @@ abstract public class Board implements Constants, algds.Constants {
     /************************
      *  Aktionen und Phasen *
      ************************/
-    public long setRemoveAction(long board) {
+    static public long setRemoveAction(long board) {
         return board | (1L << BIT_ACTION) | (1L << (BIT_ACTION + 1));
     }
 
-    public long setNoAction(long board) {
+    static public boolean isRemoveAction(long board) {
+        return ((board & (1L << BIT_ACTION)) != 0L) && ((board & (1L << (BIT_ACTION+1))) != 0L);
+    }
+
+    static public long setNoAction(long board) {
         return board & ~((1L << BIT_ACTION) | (1L << (BIT_ACTION + 1)));
     }
 
@@ -69,7 +73,7 @@ abstract public class Board implements Constants, algds.Constants {
         return 24 - Long.bitCount((board & BITS_MENS1) | ((board & BITS_MENS2) >> 24));
     }
 
-    public long switchPlayer(long board) {
+    static public long switchPlayer(long board) {
         return board ^ (1L << BIT_PLAYER);
     }
 

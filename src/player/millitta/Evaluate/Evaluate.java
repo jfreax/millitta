@@ -40,20 +40,21 @@ public class Evaluate extends Board {
         fitness += Weighting[WEIGHT_CLOSED_MILL] * getClosedMills();
         fitness += Weighting[WEIGHT_MEN] * getMyMenVsOppMen();
 
-        System.out.println("Fitness: " + fitness + " | " + getOpenMills() + ", " + getClosedMills() + ", " + getMyMenVsOppMen());
+        System.out.println("Fitness: " + fitness + " | OM: " + getOpenMills() + ", CM:" + getClosedMills() +
+                ", MvsO" + getMyMenVsOppMen());
 
         return fitness;
     }
 
     /*
-        Es existieren insgesamt 16 mögliche Mühlen.
-        Für jede Mühle wird eine 24 Bit-Maske angelegt und die entsprechenden Bits gemäß des Spielfeldes gesetzt.
+        Es existieren insgesamt 16 moegliche Mühlen.
+        Für jede Muehle wird eine 24 Bit-Maske angelegt und die entsprechenden Bits gemaeß des Spielfeldes gesetzt.
         Auf diese Masken kann dann eine logische UND-Verknüpfung mit den Bits der gesetzten Steine
         des entsprechenden Spielers angewandt werden.
 
-        Sind bei einer Maske noch 3 Bits gesetzt, so hat der Spieler dort eine geschlossene Mühle.
-        Durch Abzählen, bei wievielen der 16 Masken dies vorkommt,
-        weiß man wieviele Mühlen der Spieler insgesamt hat.
+        Sind bei einer Maske noch 3 Bits gesetzt, so hat der Spieler dort eine geschlossene Muehle.
+        Durch Abzaehlen, bei wievielen der 16 Masken dies vorkommt,
+        weiss man wieviele Muehlen der Spieler insgesamt hat.
      */
     private int getClosedMills() {
         int closedMills = 0;
