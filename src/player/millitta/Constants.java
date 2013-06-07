@@ -22,15 +22,15 @@ public interface Constants {
     int WEIGHT_CLOSED_MILL = 1;
     int WEIGHT_DOUBLE_MILL = 2;
     int WEIGHT_MEN = 4;
+    int WEIGHT_MOVABLE = 5;
 
     static final double[] Weighting = {
             1.0, // open mills
-            5.0, // closed mills
+            3.0, // closed mills
             5.0, // Zwickmuehle
             1.5, // Gabeln
             1.2, // men
-            1.2, // rest
-            1.5, // moveable
+            1.5, // movable
             1.0  // Kreuzungen
     };
 

@@ -40,9 +40,10 @@ public class Evaluate extends Board {
         fitness += Weighting[WEIGHT_CLOSED_MILL] * getClosedMills();
         fitness += Weighting[WEIGHT_DOUBLE_MILL] * getDoubleMills();
         fitness += Weighting[WEIGHT_MEN] * getMyMenVsOppMen();
+        fitness += Weighting[WEIGHT_MOVABLE] * getMovable();
 
         System.out.println("Fitness: " + fitness + " | OM: " + getOpenMills() + ", CM: " + getClosedMills() +
-                ", Mvs: " + getMyMenVsOppMen() + ", ZM: " + getDoubleMills() );
+                ", Mvs: " + getMyMenVsOppMen() + ", ZM: " + getDoubleMills() + ", MA: " + getMovable() );
 
         return fitness;
     }
@@ -170,10 +171,26 @@ public class Evaluate extends Board {
         return (float)getMyMenOnBoard() / (float)getOppMenOnBoard();
     }
 
-    private void calcBoardWithoutMills() {
-        if (boardWithoutMills == -1) {
-            getClosedMills();
+    /*
+        Anzahl der noch beweglichen Steine
+     */
+    private int getMovable() {
+        int movable = 0;
+        for( int i = 0; i < 24; i++ ) {
+            // Fuer jeden der Spielfiguren
+            if( (playersBoard_ & (1L << i)) != 0L ) {
+                // Alle Nachbarschaftsfelder ueberpruefen
+                for( int neighbor : LookupTable.neighbors[i]) {
+                    // Ob sie frei sind
+                    if( (playersBoard_ & (1L << neighbor)) == 0L ) {
+                        movable++;
+                        break;
+                    }
+                }
+            }
         }
+
+        return movable;
     }
 
 

@@ -10,5 +10,5 @@ public interface AlphaBetaPruningConstants {
     int INFINITY = Integer.MAX_VALUE;
     int NEG_INFINITY = Integer.MIN_VALUE;
 
-    int END_VALUE = -5000;
+    int END_VALUE = 0;
 }
