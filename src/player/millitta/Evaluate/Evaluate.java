@@ -36,9 +36,9 @@ public class Evaluate extends Board {
     public double getFitness() {
         double fitness = 0.f;
 
-        //fitness += Weighting[WEIGHT_OPEN_MILL] * getOpenMills();
-        //fitness += Weighting[WEIGHT_CLOSED_MILL] * getClosedMills();
-        //fitness += Weighting[WEIGHT_MEN] * getMyMenVsOppMen();
+        fitness += Weighting[WEIGHT_OPEN_MILL] * getOpenMills();
+        fitness += Weighting[WEIGHT_CLOSED_MILL] * getClosedMills();
+        fitness += Weighting[WEIGHT_MEN] * getMyMenVsOppMen();
 
         System.out.println("Fitness: " + fitness + " | " + getOpenMills() + ", " + getClosedMills() + ", " + getMyMenVsOppMen());
 
