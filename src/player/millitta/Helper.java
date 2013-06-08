@@ -77,7 +77,7 @@ public class Helper implements Constants {
         System.out.print(" - ");
         System.out.print(playerOnPos(board, 20));
 
-        System.out.print("   |   |\n|   |               |   |\n");
+        System.out.print("   |   |\n|   |       |       |   |\n");
 
 
         System.out.print("|   " + playerOnPos(board, 14));

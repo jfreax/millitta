@@ -26,8 +26,8 @@ public interface Constants {
 
     static final double[] Weighting = {
             1.0, // open mills
-            3.0, // closed mills
-            5.0, // Zwickmuehle
+            5.0, // closed mills
+            8.0, // Zwickmuehle
             1.5, // Gabeln
             1.2, // men
             1.5, // movable

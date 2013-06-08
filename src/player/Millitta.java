@@ -13,9 +13,9 @@ public class Millitta extends player.millitta.Millitta {
         //long board = 2148921259453317200L; // ^ (1L << BIT_PLAYER);
         long board = 1536422364282103296L;
         board = 1514185841121961473L; // bloed
-        board = 10918150463815904L;
-        Helper.printBoard(board);
-        board = 1909851697447105L;
+        board = 2148885525325414403L;
+        //Helper.printBoard(board);
+        //board = 1909851697447105L;
         //long board = 1820355849000880256L; // gut
         //board |= 1L << BIT_PHASE;
 
@@ -63,13 +63,13 @@ public class Millitta extends player.millitta.Millitta {
 //            Helper.printBoard(b);
 //        }
 //
-//        AlphaBetaPruning ab =  new AlphaBetaPruning(board, 8, 10000);
-//        long bestBoard = ab.getBestBoard();
-//
-//        System.out.println("Now: " + board + " | Next: " + bestBoard);
-//
-//        System.out.println("Next:");
-//        Helper.printBoard(bestBoard);
+        AlphaBetaPruning ab =  new AlphaBetaPruning(board, 8, 5000);
+        long bestBoard = ab.getBestBoard();
+
+        System.out.println("Now: " + board + " | Next: " + bestBoard);
+
+        System.out.println("Next:");
+        Helper.printBoard(bestBoard);
 //
 //        long bitDiff = (board ^ bestBoard) & BITS_MENS;
 //        int pos = (int) (Math.log(bitDiff) / LOG2);

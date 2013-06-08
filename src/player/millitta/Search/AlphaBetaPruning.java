@@ -103,7 +103,7 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
         // Maximale Tiefe erreicht
         // Rueckgabe der Fitness dieses Knotens
         if (remainingDepth == 0) {
-            double fit = (new Evaluate(currentBoard)).getFitness();
+            double fit = (new Evaluate(currentBoard)).getFitness() * (maxDepth-currentDepth);
             //System.out.println("Depth0: " + (currentBoard));
             System.out.println("Depth0 fitness: " + fit);
             Helper.printBoard(currentBoard);

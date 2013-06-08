@@ -22,7 +22,7 @@ public class Evaluate extends Board {
 
         // Spieler muss getauscht werden, da dies ja das Board fuer die naechste Runde ist, aber
         // die Auswertung noch fuer diesen stattfinden soll.
-        this.board = switchPlayer(this.board);
+        //this.board = switchPlayer(this.board);
 
 
         playersBoard_ = this.board;
