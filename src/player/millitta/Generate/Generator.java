@@ -7,6 +7,7 @@ public class Generator implements Constants, algds.Constants {
     private Generator() {
     }
 
+    // TODO static klassen, keine Realloziierung
     static public AbstractGenerator get(long board) {
         if ((board & ((1L << BIT_ACTION))) != 0L && ((board & (1L << (BIT_ACTION + 1))) != 0L)) { // Remove
             return new GeneratorRemoveAction(board);

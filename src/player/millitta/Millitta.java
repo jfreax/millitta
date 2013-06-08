@@ -28,11 +28,10 @@ public class Millitta extends Player implements Constants {
     public void play() {
         board = getBoardLong();
 
-
         Evaluator eval = new Evaluator(board);
         long nextBoard = eval.getNextBoard();
 
-
+        // Debugging
         setMessage("Board: " + String.valueOf(board));
         setMessage("Next board: " + nextBoard);
 
@@ -40,7 +39,6 @@ public class Millitta extends Player implements Constants {
         long bitDiff = (board ^ nextBoard) & BITS_MENS;
         if ((board & ((1L << BIT_ACTION))) != 0L) {
             int pos = (int) (Math.log(bitDiff) / LOG2);
-            setMessage("Set Man to: "+pos);
             pos = pos >= 24 ? pos - 24 : pos;
 
             if ((board & (1L << (BIT_ACTION + 1))) != 0L) { // Remove man
@@ -90,7 +88,6 @@ public class Millitta extends Player implements Constants {
                     break;
             }
         }
-        setMessage("First first board: " + board);
 
         // Aktion und Spielphase
         switch (getAction()) {

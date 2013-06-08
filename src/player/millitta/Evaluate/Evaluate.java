@@ -2,7 +2,6 @@ package player.millitta.Evaluate;
 
 
 import player.millitta.Board;
-import player.millitta.Helper;
 import player.millitta.LookupTable;
 
 public class Evaluate extends Board {
@@ -43,7 +42,7 @@ public class Evaluate extends Board {
         fitness += Weighting[WEIGHT_MOVABLE] * getMovable();
 
         System.out.println("Fitness: " + fitness + " | OM: " + getOpenMills() + ", CM: " + getClosedMills() +
-                ", Mvs: " + getMyMenVsOppMen() + ", ZM: " + getDoubleMills() + ", MA: " + getMovable() );
+                ", Mvs: " + getMyMenVsOppMen() + ", ZM: " + getDoubleMills() + ", MA: " + getMovable());
 
         return fitness;
     }
@@ -81,6 +80,8 @@ public class Evaluate extends Board {
         reicht diese Bedingung schon aus. Ansonsten muss geprueft werden, ob ein angrenzedes Feld zu dem Feld,
         in dem der Stein zur fertigen Muehle fehlt, auch ein Stein des selben Spielers liegt.
         Dieser Stein darf dann natuerlich nicht selber schon Teil der gerade betrachteten offenen Muehle sein.
+
+        TODO lockup table benutzen
      */
     private int getOpenMills() {
         int openMills = 0;
@@ -141,12 +142,12 @@ public class Evaluate extends Board {
             // Offene Muehle
             if (Long.bitCount(playersBoard_ & mill) == 2) {
                 // Position des fehlenden Steines
-                int holePos = (int)Math.round(Math.log((playersBoard_ & mill) ^ mill) / LOG2);
+                int holePos = (int) Math.round(Math.log((playersBoard_ & mill) ^ mill) / LOG2);
 
                 // Fuer jeden Nachbarn davon
-                for( int neighbor : LookupTable.neighbors[holePos] ) {
+                for (int neighbor : LookupTable.neighbors[holePos]) {
                     // Der Nachbar darf nicht mit in der selben (offenen) Muehle sein
-                    if( (mill & (1L << neighbor)) == 0L ) {
+                    if ((mill & (1L << neighbor)) == 0L) {
                         for (int mill2 : LookupTable.millAt[neighbor]) {
                             // Ist der Nachbar dann Teil einer Muehle, so haben wir hier eine Zwickmuehle :)
                             if (Long.bitCount(playersBoard_ & mill2) == 3) {
@@ -163,12 +164,11 @@ public class Evaluate extends Board {
         return doubleMills;
     }
 
-
     private double getMyMenVsOppMen() {
-        if( getMyMenOnBoard() == 0 || getOppMenOnBoard() == 0 ) {
+        if (getMyMenOnBoard() == 0 || getOppMenOnBoard() == 0) {
             return 0.f;
         }
-        return (float)getMyMenOnBoard() / (float)getOppMenOnBoard();
+        return (float) getMyMenOnBoard() / (float) getOppMenOnBoard();
     }
 
     /*
@@ -176,13 +176,13 @@ public class Evaluate extends Board {
      */
     private int getMovable() {
         int movable = 0;
-        for( int i = 0; i < 24; i++ ) {
+        for (int i = 0; i < 24; i++) {
             // Fuer jeden der Spielfiguren
-            if( (playersBoard_ & (1L << i)) != 0L ) {
+            if ((playersBoard_ & (1L << i)) != 0L) {
                 // Alle Nachbarschaftsfelder ueberpruefen
-                for( int neighbor : LookupTable.neighbors[i]) {
+                for (int neighbor : LookupTable.neighbors[i]) {
                     // Ob sie frei sind
-                    if( (playersBoard_ & (1L << neighbor)) == 0L ) {
+                    if ((playersBoard_ & (1L << neighbor)) == 0L) {
                         movable++;
                         break;
                     }

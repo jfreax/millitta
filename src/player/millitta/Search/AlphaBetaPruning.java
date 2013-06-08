@@ -44,7 +44,6 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
             System.out.println("------- Start with depth: " + depth);
             double value = alphaBetaPruningSearch(board, NEG_INFINITY, INFINITY, 0, depth);
 
-            //System.out.println("Current best: " + currentBestBoardValue);
             if (Math.abs(value) == END_VALUE) {
                 if (currentBestBoardValue <= prevBestBoardValue) {
                     currentBestBoard = prevBestBoard;
@@ -69,6 +68,10 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
 
     private double absolutBest = -1000;
     private long absolutBestBoard = 0L;
+
+    /*
+        Alpha Beta Pruning mit Negamax.
+     */
     private double alphaBetaPruningSearch(long currentBoard, double alpha, double beta, int currentDepth, int remainingDepth) {
         System.out.println("Enter alpha beta search");
         if (System.currentTimeMillis() > endTime) {
@@ -136,6 +139,8 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
                     break;
                 }
 
+                // FIXME hack
+                // TODO Das entfernen der Spielfigur sollte schon von der getNextBoards mit einberechenbar sein
                 if (Board.isRemoveAction(nextBoard)) {
                     AbstractGenerator nextBoardsGenerator2 = Generator.get(currentBoard);
                     long[] nextBoards2 = nextBoardsGenerator.getNextBoards();
@@ -193,72 +198,10 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
             }
 
             return alpha;
-
-/*            // Für jedes moegliche Nachfolgespielbrett...
-            for (long nextBoard : nextBoards) {
-                if( nextBoard == MAGIC_NO_BOARD ) {
-                    break;
-                }
-
-                // Wenn das Spielbrett fuer den zu maximierenden Spieler ist
-                if( isMaxPlayer(nextBoard)) {
-                    System.out.println("Alpha");
-                    value = alphaBetaPruningSearch(nextBoard, alpha, beta, currentDepth+1, remainingDepth-1);
-
-                    System.out.println("Value: " + value + " | Alpha: " + alpha + " | Depth: " + currentDepth);
-
-                    // Abbrechen wenn eine Ebene unter dieser hier abgebrochen wurde
-                    //if( value == END_VALUE ) {
-                    //    return END_VALUE;
-                    //}
-
-                    if( value > alpha) {
-                        System.out.println("value > alpha");
-                        alpha = value;
-
-                        // Obersten Knoten als den momentan besten merken
-                        if ( currentDepth == 0 ) {
-                            if (value > currentBestBoardValue) {
-                                System.out.println("New currentBestBoardValue");
-                                currentBestBoard = nextBoard;
-                                currentBestBoardValue = value;
-                            }
-                        }
-                    }
-
-                    if (value > nodeBestValue) {
-                        nodeBestValue = value;
-                        nodeBestBoard = nextBoard;
-                    }
-
-                } else {
-                    System.out.println("Beta");
-                    beta = Math.min(beta, alphaBetaPruningSearch(nextBoard, alpha, beta, currentDepth+1, remainingDepth-1));
-                }
-
-                // Cut-off
-                if ( beta <= alpha ) {
-                    System.out.println("Cutoff");
-                    break;
-                }
-            }
-
-            //return nodeBestValue;
-
-            if( !isMaxPlayer(currentBoard)) {
-                System.out.println("Alpha: " + alpha);
-                return alpha; // Alpha Cut-off
-            } else {
-                System.out.println("Beta: " + beta);
-                return  beta; // Beta Cut-off
-            }*/
-
-            //transpositionTable.put(currentBoard.getBoardID(), new BoardStateValue(nodeBestValue, remainingDepth, nodeBestMove, alpha >= beta, nodeBestValue < alpha));
-
-            //return nodeBestValue;
         }
     }
 
+    @Deprecated
     private boolean isMaxPlayer(long nextBoard) {
         return (board & (1L << BIT_PLAYER)) != (nextBoard & (1L << BIT_PLAYER));
     }
