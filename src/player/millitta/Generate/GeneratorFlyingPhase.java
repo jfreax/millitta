@@ -13,7 +13,7 @@ public class GeneratorFlyingPhase extends AbstractGenerator {
 
         for (int i = 0; i < 24; i++) {
             // Fuer jeden meiner Spielsteine
-            if (isMyMen(i)) {
+            if (isMyMen(board, i)) {
                 // Teste jede andere position ...
                 for (int j = 0; j < 24; j++) {
                     // ... ob sie noch frei ist.

@@ -11,6 +11,7 @@ public class Evaluate extends Board {
     private long playersBoard_ = 0L;
     private long oppsBoard_ = 0L;
     private long boardWithoutMills = -1L;
+    public int oneDoubleMillHole;
 
     /*
          0-22 = Mens of White Player (0)
@@ -147,6 +148,7 @@ public class Evaluate extends Board {
             if (Long.bitCount(playersBoard_ & mill) == 2) {
                 // Position des fehlenden Steines
                 int holePos = (int) Math.round(Math.log((playersBoard_ & mill) ^ mill) / LOG2);
+                this.oneDoubleMillHole = holePos;
 
                 // Fuer jeden Nachbarn davon
                 for (int neighbor : LookupTable.neighbors[holePos]) {

@@ -15,7 +15,7 @@ public class GeneratorMovingPhase extends AbstractGenerator {
 
         for (int i = 0; i < 24; i++) {
             // Fuer jeden meiner Spielsteine
-            if (isMyMen(i)) {
+            if (isMyMen(board, i)) {
                 // Teste jede Nachbarposition ...
                 for (int neighbor : LookupTable.neighbors[i]) {
                     // ... ob sie noch frei ist.

@@ -108,7 +108,7 @@ abstract public class Board implements Constants, algds.Constants {
         }
     }
 
-    protected boolean isMyMen(int at) {
+    static public boolean isMyMen(long board, int at) {
         if ((board & (1L << BIT_PLAYER)) != 0L) {
             return (board & (1L << (24 + at))) != 0L;
         } else {

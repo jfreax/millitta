@@ -49,10 +49,8 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
                     currentBestBoard = prevBestBoard;
                     currentBestBoardValue = prevBestBoardValue;
                 }
-
                 break;
             }
-
 
             prevBestBoard = currentBestBoard;
             prevBestBoardValue = value;
@@ -142,61 +140,25 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
                     break;
                 }
 
-                // FIXME hack
-                // TODO Das entfernen der Spielfigur sollte schon von der getNextBoards mit einberechenbar sein
                 if (Board.isRemoveAction(nextBoard)) {
-                    AbstractGenerator nextBoardsGenerator2 = Generator.get(currentBoard);
-                    long[] nextBoards2 = nextBoardsGenerator2.getNextBoards();
-                    for (long nextBoard2 : nextBoards2) {
-                        if( nextBoard2 == MAGIC_NO_BOARD ) {
-                            break;
-                        }
-                        // Wird wie ein einziger Zug behandelt, gehe also nicht tiefer!
-                        value = -alphaBetaPruningSearch(nextBoard2, -alpha, -beta, currentDepth, remainingDepth);
-
-                        if( value >= beta) {
-//                            if( currentDepth == 0 ) {
-//                                currentBestBoard = nextBoard;
-//                                currentBestBoardValue = value;
-//                            }
-
-                            return value;
-                        }
-
-                        if( value > alpha ) {
-                            alpha = value;
-
-                            if( alpha >= beta) {
-                                break;
-                            }
-                            if( currentDepth == 0 ) {
-                                currentBestBoard = nextBoard;
-                                currentBestBoardValue = value;
-                            }
-                        }
-                    }
+                    value = alphaBetaPruningSearch(nextBoard, alpha, beta, currentDepth, remainingDepth);
                 } else {
                     value = -alphaBetaPruningSearch(nextBoard, -alpha, -beta, currentDepth+1, remainingDepth-1);
+                }
 
-                    if( value >= beta) {
-//                        if( currentDepth == 0 ) {
-//                            currentBestBoard = nextBoard;
-//                            currentBestBoardValue = value;
-//                        }
+                if( value >= beta) {
+                    return value;
+                }
 
-                        return value;
+                if( value > alpha ) {
+                    alpha = value;
+
+                    if( alpha >= beta) {
+                        break;
                     }
-
-                    if( value > alpha ) {
-                        alpha = value;
-
-                        if( alpha >= beta) {
-                            break;
-                        }
-                        if( currentDepth == 0 ) {
-                            currentBestBoard = nextBoard;
-                            currentBestBoardValue = value;
-                        }
+                    if( currentDepth == 0 ) {
+                        currentBestBoard = nextBoard;
+                        currentBestBoardValue = value;
                     }
                 }
             }
