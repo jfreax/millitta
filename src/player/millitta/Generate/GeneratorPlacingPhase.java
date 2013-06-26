@@ -12,7 +12,8 @@ public class GeneratorPlacingPhase extends AbstractGenerator {
     public long[] getNextBoards() {
         boardPointer = 0;
 
-        int maxRest = 9 - getMyMenOnBoard();
+        int myPlayerOnBoard = getMyMenOnBoard();
+        int maxRest = 9 - myPlayerOnBoard;
         if (maxRest <= 0) {
             System.out.println("Something went wrong!\nGamephase says I have to set a man, but no men left to set :/");
             return nextBoards;
@@ -28,6 +29,10 @@ public class GeneratorPlacingPhase extends AbstractGenerator {
 
                 nextBoard = changePlayerIfNecessary(nextBoard, i);
                 nextBoard = getBoardWithNewPhase(nextBoard);
+
+                if( myPlayerOnBoard + 1 >= 9 ) {
+                    setMoveAction(nextBoard);
+                }
 
                 nextBoards[boardPointer++] = nextBoard;
             }

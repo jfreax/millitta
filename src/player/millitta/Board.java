@@ -15,6 +15,11 @@ abstract public class Board implements Constants, algds.Constants {
         return board | (1L << BIT_ACTION) | (1L << (BIT_ACTION + 1));
     }
 
+    static public long setMoveAction(long board) {
+        board |= (1L << BIT_ACTION);
+        return board & ~(1L << (BIT_ACTION + 1));
+    }
+
     static public boolean isRemoveAction(long board) {
         return ((board & (1L << BIT_ACTION)) != 0L) && ((board & (1L << (BIT_ACTION+1))) != 0L);
     }
@@ -28,14 +33,19 @@ abstract public class Board implements Constants, algds.Constants {
         dann bin ich immer noch an der Reihe, ansonsten muessen die Spieler gewechselt werden.
         Achtung: Passt auch automatisch die Aktion auf "Remove" an wenn es sein muss.
     */
-    public long changePlayerIfNecessary(long board, int at) {
-        if( !isMyMenInOpenMill(at) ) {
+    static public long changePlayerIfNecessary(long board, int at) {
+        if( !isMyMenInOpenMill(board, at) ) {
             board = switchPlayer(board);
             //board = setNoAction(board);
         } else { // Naechse Aktion ist jemanden vom Board zu kicken
             board = setRemoveAction(board);
         }
         return board;
+    }
+
+
+    public long unsetRemoveAction(long board) {
+        return board & ~(board & (1L << (BIT_ACTION + 1)));
     }
 
     /*
@@ -106,7 +116,7 @@ abstract public class Board implements Constants, algds.Constants {
         }
     }
 
-    protected boolean isMyMenInOpenMill(int at) {
+    static protected boolean isMyMenInOpenMill(long board, int at) {
         long tmpBoard = board;
         if ((board & (1L << BIT_PLAYER)) != 0L) {
             tmpBoard >>= 24;

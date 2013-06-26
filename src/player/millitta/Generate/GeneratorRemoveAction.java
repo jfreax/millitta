@@ -11,11 +11,17 @@ public class GeneratorRemoveAction extends AbstractGenerator {
     public long[] getNextBoards() {
         boardPointer = 0;
 
+        //System.out.println("Remove!");
+
         boolean removed = false;
         for (int i = 0; i < 24; i++) {
             if (isRemoveOppManPossible(i)) {
                 removed = true;
-                nextBoards[boardPointer++] = removeOppMan(i);
+
+                long nextBoard = removeOppMan(i);
+                nextBoard = getBoardWithNewPhase(nextBoard);
+                nextBoard = unsetRemoveAction(nextBoard);
+                nextBoards[boardPointer++] = nextBoard;
             }
         }
         // Kein Stein konnte entfernt werden.
@@ -27,8 +33,9 @@ public class GeneratorRemoveAction extends AbstractGenerator {
                     long nextBoard = removeOppMan(i);
 
                     nextBoard = switchPlayer(nextBoard);
-                    nextBoard = setNoAction(nextBoard);
+                    //nextBoard = setNoAction(nextBoard);
                     nextBoard = getBoardWithNewPhase(nextBoard);
+                    nextBoard = unsetRemoveAction(nextBoard);
 
                     nextBoards[boardPointer++] = nextBoard;
                 }
