@@ -29,10 +29,9 @@ abstract public class Board implements Constants, algds.Constants {
         Achtung: Passt auch automatisch die Aktion auf "Remove" an wenn es sein muss.
     */
     public long changePlayerIfNecessary(long board, int at) {
-
         if( !isMyMenInOpenMill(at) ) {
             board = switchPlayer(board);
-            board = setNoAction(board);
+            //board = setNoAction(board);
         } else { // Naechse Aktion ist jemanden vom Board zu kicken
             board = setRemoveAction(board);
         }
