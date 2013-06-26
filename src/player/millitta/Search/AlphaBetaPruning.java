@@ -34,7 +34,7 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
     }
 
 
-    public long getBestBoard() {
+    public long getBestBoard() throws YouLostException {
         this.endTime = maxTime + System.currentTimeMillis();
 
         long prevBestBoard = currentBestBoard;
@@ -61,6 +61,9 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
         //System.out.println("best path: " + currentBestBoardValue + " für " + currentBestBoard);
         //System.out.println("abs. best node: " + absolutBest + " für " + absolutBestBoard);
 
+        if( currentBestBoardValue == -1) {
+            throw new YouLostException();
+        }
 
         return currentBestBoard;
 
@@ -106,7 +109,7 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
         // Maximale Tiefe erreicht
         // Rueckgabe der Fitness dieses Knotens
         if (remainingDepth == 0) {
-            double fit = (new Evaluate(currentBoard)).getFitness() * (maxDepth-currentDepth);
+            double fit = (new Evaluate(currentBoard)).getFitness();
             //System.out.println("Depth0: " + (currentBoard));
             //System.out.println("Depth0 fitness: " + fit);
             //Helper.printBoard(currentBoard);
@@ -143,12 +146,13 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
                 // TODO Das entfernen der Spielfigur sollte schon von der getNextBoards mit einberechenbar sein
                 if (Board.isRemoveAction(nextBoard)) {
                     AbstractGenerator nextBoardsGenerator2 = Generator.get(currentBoard);
-                    long[] nextBoards2 = nextBoardsGenerator.getNextBoards();
+                    long[] nextBoards2 = nextBoardsGenerator2.getNextBoards();
                     for (long nextBoard2 : nextBoards2) {
                         if( nextBoard2 == MAGIC_NO_BOARD ) {
                             break;
                         }
-                        value = -alphaBetaPruningSearch(nextBoard2, -alpha, -beta, currentDepth+1, remainingDepth-1);
+                        // Wird wie ein einziger Zug behandelt, gehe also nicht tiefer!
+                        value = -alphaBetaPruningSearch(nextBoard2, -alpha, -beta, currentDepth, remainingDepth);
 
                         if( value >= beta) {
 //                            if( currentDepth == 0 ) {
