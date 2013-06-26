@@ -19,6 +19,7 @@ public class GeneratorRemoveAction extends AbstractGenerator {
                 removed = true;
 
                 long nextBoard = removeOppMan(i);
+                nextBoard = switchPlayer(nextBoard);
                 nextBoard = getBoardWithNewPhase(nextBoard);
                 nextBoard = unsetRemoveAction(nextBoard);
                 nextBoards[boardPointer++] = nextBoard;
