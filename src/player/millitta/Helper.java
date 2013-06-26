@@ -108,8 +108,25 @@ public class Helper implements Constants {
         } else { // Zugphase
             System.out.println("Moving");
         }
+    }
 
+    static public String[] dnaName = {
+            "open mills",
+            "closed mills",
+            "Zwickmuehle",
+            "Gabeln",
+            "men",
+            "movable",
+            "Kreuzungen"
+    };
 
+    static public void printDNA(double[] dna) {
+        System.out.println("{");
+        for( int i = 0; i < 7; i++ ) {
+            System.out.println("\t" + dna[i] + ", // " + dnaName[i]);
+        }
+
+        System.out.println("}");
 
     }
 

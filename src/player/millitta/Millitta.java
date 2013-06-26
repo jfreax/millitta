@@ -2,6 +2,7 @@ package player.millitta;
 
 import algds.Player;
 import player.millitta.Evaluate.Evaluator;
+import player.millitta.Search.YouLostException;
 
 public class Millitta extends Player implements Constants {
     private long board;
@@ -26,7 +27,7 @@ public class Millitta extends Player implements Constants {
         super();
     }
 
-    public long playWithoutEngine(long board) {
+    public long playWithoutEngine(long board) throws YouLostException {
         this.board = board;
 
         Evaluator eval = new Evaluator(board);
@@ -39,7 +40,13 @@ public class Millitta extends Player implements Constants {
         board = getBoardLong();
 
         Evaluator eval = new Evaluator(board);
-        long nextBoard = eval.getNextBoard();
+        long nextBoard = 0;
+
+        try {
+            nextBoard = eval.getNextBoard();
+        } catch (YouLostException e) {
+            setMessage("I lost :(");
+        }
 
         // Debugging
         setMessage("Board: " + String.valueOf(board));
