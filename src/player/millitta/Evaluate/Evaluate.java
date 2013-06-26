@@ -44,18 +44,25 @@ public class Evaluate extends Board {
             return -1L;
         }
 
+        int id = 0;
+        if ((this.board & (1L << BIT_PLAYER)) != 0) {
+            id = 1;
+        }
 
-        fitness += Weighting[WEIGHT_CLOSED_MILL] * getClosedMills();
-        fitness += Weighting[WEIGHT_OPEN_MILL] * getOpenMills();
-        fitness += Weighting[WEIGHT_DOUBLE_MILL] * getDoubleMills();
-        fitness += Weighting[WEIGHT_MEN] * getMyMenVsOppMen();
-        fitness += Weighting[WEIGHT_MOVABLE] * getMovable();
 
+        fitness += Weighting[id][WEIGHT_CLOSED_MILL] * getClosedMills();
+        fitness += Weighting[id][WEIGHT_OPEN_MILL] * getOpenMills();
+        fitness += Weighting[id][WEIGHT_DOUBLE_MILL] * getDoubleMills();
+        fitness += Weighting[id][WEIGHT_MEN] * getMyMenVsOppMen();
+        fitness += Weighting[id][WEIGHT_MOVABLE] * getMovable();
+
+/*
         System.out.println(board);
         Helper.printBoardState(board);
         Helper.printBoard(board);
         System.out.println("Fitness: " + fitness + " | OM: " + getOpenMills() + ", CM: " + getClosedMills() +
                 ", Mvs: " + getMyMenVsOppMen() + ", ZM: " + getDoubleMills() + ", MA: " + getMovable());
+*/
 
         return fitness;
     }
@@ -63,7 +70,7 @@ public class Evaluate extends Board {
     /*
         Verloren hat, wer nur noch zwei Spielsteine hat oder sich nicht mehr bewegen kann.
      */
-    private boolean isLost() {
+    public boolean isLost() {
         if( getMyMenOnBoard(board) + getMyRest(board) <= 2 || (getMovable() == 0 && getMyRest(board) <= 0) ) {
             return true;
         }
@@ -80,7 +87,7 @@ public class Evaluate extends Board {
         Durch Abzaehlen, bei wievielen der 16 Masken dies vorkommt,
         weiss man wieviele Muehlen der Spieler insgesamt hat.
      */
-    private int getClosedMills() {
+    public int getClosedMills() {
         int closedMills = 0;
         boardWithoutMills = playersBoard_;
 
@@ -103,10 +110,8 @@ public class Evaluate extends Board {
         reicht diese Bedingung schon aus. Ansonsten muss geprueft werden, ob ein angrenzedes Feld zu dem Feld,
         in dem der Stein zur fertigen Muehle fehlt, auch ein Stein des selben Spielers liegt.
         Dieser Stein darf dann natuerlich nicht selber schon Teil der gerade betrachteten offenen Muehle sein.
-
-        TODO lockup table benutzen
      */
-    private int getOpenMills() {
+    public int getOpenMills() {
         int openMills = 0;
 
         for (int mill : LookupTable.mills) {
@@ -134,7 +139,7 @@ public class Evaluate extends Board {
         Erweiterung des Algorithmus zum erkennen von offenen Muehlen.
         Hier muss nur der angrenzende Stein selbst schon in einer Muehle sein.
      */
-    private int getDoubleMills() {
+    public int getDoubleMills() {
         int doubleMills = 0;
 
         for (int mill : LookupTable.mills) {
@@ -163,7 +168,7 @@ public class Evaluate extends Board {
         return doubleMills;
     }
 
-    private double getMyMenVsOppMen() {
+    public double getMyMenVsOppMen() {
         if (getMyMenOnBoard() == 0 || getOppMenOnBoard() == 0) {
             return 0.f;
         }
@@ -173,7 +178,7 @@ public class Evaluate extends Board {
     /*
         Anzahl der noch beweglichen Steine.
      */
-    private int getMovable() {
+    public int getMovable() {
         int movable = 0;
         for (int i = 0; i < 24; i++) {
             // Fuer jeden der Spielfiguren
