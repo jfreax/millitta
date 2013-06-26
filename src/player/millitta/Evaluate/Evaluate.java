@@ -2,12 +2,14 @@ package player.millitta.Evaluate;
 
 
 import player.millitta.Board;
+import player.millitta.Helper;
 import player.millitta.LookupTable;
 
 public class Evaluate extends Board {
 
     /* board state for only the player to evaluate */
     private long playersBoard_ = 0L;
+    private long oppsBoard_ = 0L;
     private long boardWithoutMills = -1L;
 
     /*
@@ -24,27 +26,48 @@ public class Evaluate extends Board {
         //this.board = switchPlayer(this.board);
 
 
-        playersBoard_ = this.board;
-
         if ((this.board & (1L << BIT_PLAYER)) != 0) {
+            oppsBoard_ = board;
             playersBoard_ = board & ~((long) (Math.pow(2, 24) - 1)); // Alles bis Bit 24 loeschen
             playersBoard_ |= board >> 24; // Player 1 Daten auf Player 0 Datenposition verschieben
+        } else {
+            playersBoard_ = board;
+            oppsBoard_ = board & ~((long) (Math.pow(2, 24) - 1));
+            oppsBoard_ |= board >> 24;
         }
     }
 
     public double getFitness() {
         double fitness = 0.f;
 
-        fitness += Weighting[WEIGHT_OPEN_MILL] * getOpenMills();
+        if( isLost() ) {
+            return -1L;
+        }
+
+
         fitness += Weighting[WEIGHT_CLOSED_MILL] * getClosedMills();
+        fitness += Weighting[WEIGHT_OPEN_MILL] * getOpenMills();
         fitness += Weighting[WEIGHT_DOUBLE_MILL] * getDoubleMills();
         fitness += Weighting[WEIGHT_MEN] * getMyMenVsOppMen();
         fitness += Weighting[WEIGHT_MOVABLE] * getMovable();
 
-        //System.out.println("Fitness: " + fitness + " | OM: " + getOpenMills() + ", CM: " + getClosedMills() +
-        //        ", Mvs: " + getMyMenVsOppMen() + ", ZM: " + getDoubleMills() + ", MA: " + getMovable());
+        System.out.println(board);
+        Helper.printBoardState(board);
+        Helper.printBoard(board);
+        System.out.println("Fitness: " + fitness + " | OM: " + getOpenMills() + ", CM: " + getClosedMills() +
+                ", Mvs: " + getMyMenVsOppMen() + ", ZM: " + getDoubleMills() + ", MA: " + getMovable());
 
         return fitness;
+    }
+
+    /*
+        Verloren hat, wer nur noch zwei Spielsteine hat oder sich nicht mehr bewegen kann.
+     */
+    private boolean isLost() {
+        if( getMyMenOnBoard(board) + getMyRest(board) <= 2 || (getMovable() == 0 && getMyRest(board) <= 0) ) {
+            return true;
+        }
+        return false;
     }
 
     /*
@@ -91,37 +114,13 @@ public class Evaluate extends Board {
                 if ((playersBoard_ & (1L << BIT_PHASE)) != 0) { // Setz oder Flugphase
                     openMills++;
                 } else { // Angrenzend bewegbarer Stein, der nicht in einer Muehle ist
-                    long holePos = Math.round(Math.log((playersBoard_ & mill) ^ mill) / LOG2);
+                    int holePos = (int)Math.round(Math.log((playersBoard_ & mill) ^ mill) / LOG2);
                     long boardWithoutOpenAndClosedMills = boardWithoutMills & ~(mill);
 
-                    long nextPos = holePos + 1;
-                    long prevPos = holePos - 1;
-                    if (nextPos % 8 == 0) { // "Ueberlauf"
-                        nextPos -= 8;
-                    } else if (prevPos == -1 || prevPos % 8 == 7) {
-                        prevPos += 8;
-                    }
-
-                    // Davor oder danach liegt noch ein Stein, der weder in einer geschlossenen
-                    // Muehle, noch in genau der offenen die wir uns gerade angucken, liegt.
-                    if ((boardWithoutOpenAndClosedMills & ((1L << prevPos) | (1L << nextPos))) != 0) {
-                        openMills++;
-                        continue; // mehr anliegende Steine brauchen wir uns hier nicht anschauen
-                    }
-                    if (holePos % 2 == 1) { // Fehlender Steine in einer Kreuzung Ecke
-                        nextPos = holePos + 8;
-                        if (nextPos < 24) {
-                            if ((boardWithoutOpenAndClosedMills & (1L << nextPos)) != 0) {
-                                openMills++;
-                                continue;
-                            }
-                        }
-                        prevPos = prevPos - 8;
-                        if (prevPos > 0) {
-                            if ((boardWithoutOpenAndClosedMills & (1L << prevPos)) != 0) {
-                                openMills++;
-                                // continue; // Nicht notwendig
-                            }
+                    for( int neighbor : LookupTable.neighbors[holePos]) {
+                        if( (boardWithoutOpenAndClosedMills & (1L << neighbor)) == 0L) {
+                            openMills++;
+                            break;
                         }
                     }
                 }
@@ -172,7 +171,7 @@ public class Evaluate extends Board {
     }
 
     /*
-        Anzahl der noch beweglichen Steine
+        Anzahl der noch beweglichen Steine.
      */
     private int getMovable() {
         int movable = 0;
@@ -182,7 +181,7 @@ public class Evaluate extends Board {
                 // Alle Nachbarschaftsfelder ueberpruefen
                 for (int neighbor : LookupTable.neighbors[i]) {
                     // Ob sie frei sind
-                    if ((playersBoard_ & (1L << neighbor)) == 0L) {
+                    if ((oppsBoard_ & (1L << neighbor)) == 0L && (playersBoard_ & (1L << neighbor)) == 0) {
                         movable++;
                         break;
                     }
