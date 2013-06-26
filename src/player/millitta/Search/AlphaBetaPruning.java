@@ -41,7 +41,7 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
         double prevBestBoardValue = currentBestBoardValue;
 
         for (int depth = Math.min(2, maxDepth); depth <= maxDepth; depth += 2) {
-            System.out.println("------- Start with depth: " + depth);
+            //System.out.println("------- Start with depth: " + depth);
             double value = alphaBetaPruningSearch(board, NEG_INFINITY, INFINITY, 0, depth);
 
             if (Math.abs(value) == END_VALUE) {
@@ -58,8 +58,8 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
             prevBestBoardValue = value;
         }
 
-        System.out.println("best path: " + currentBestBoardValue + " für " + currentBestBoard);
-        System.out.println("abs. best node: " + absolutBest + " für " + absolutBestBoard);
+        //System.out.println("best path: " + currentBestBoardValue + " für " + currentBestBoard);
+        //System.out.println("abs. best node: " + absolutBest + " für " + absolutBestBoard);
 
 
         return currentBestBoard;
@@ -73,7 +73,7 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
         Alpha Beta Pruning mit Negamax.
      */
     private double alphaBetaPruningSearch(long currentBoard, double alpha, double beta, int currentDepth, int remainingDepth) {
-        System.out.println("Enter alpha beta search");
+        //System.out.println("Enter alpha beta search");
         if (System.currentTimeMillis() > endTime) {
             return END_VALUE;
         }
@@ -108,8 +108,8 @@ public class AlphaBetaPruning implements AlphaBetaPruningConstants, Constants {
         if (remainingDepth == 0) {
             double fit = (new Evaluate(currentBoard)).getFitness() * (maxDepth-currentDepth);
             //System.out.println("Depth0: " + (currentBoard));
-            System.out.println("Depth0 fitness: " + fit);
-            Helper.printBoard(currentBoard);
+            //System.out.println("Depth0 fitness: " + fit);
+            //Helper.printBoard(currentBoard);
 
             if( fit > absolutBest ) {
                 absolutBest = fit;

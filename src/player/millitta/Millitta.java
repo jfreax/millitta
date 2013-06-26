@@ -5,6 +5,7 @@ import player.millitta.Evaluate.Evaluator;
 
 public class Millitta extends Player implements Constants {
     private long board;
+    private boolean withoutEngine = false;
 
     /*
         0 ----------- 1 ----------- 2
@@ -23,6 +24,15 @@ public class Millitta extends Player implements Constants {
      */
     protected Millitta() {
         super();
+    }
+
+    public long playWithoutEngine(long board) {
+        this.board = board;
+
+        Evaluator eval = new Evaluator(board);
+        long nextBoard = eval.getNextBoard();
+
+        return nextBoard;
     }
 
     public void play() {

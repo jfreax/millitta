@@ -41,8 +41,8 @@ public class Evaluate extends Board {
         fitness += Weighting[WEIGHT_MEN] * getMyMenVsOppMen();
         fitness += Weighting[WEIGHT_MOVABLE] * getMovable();
 
-        System.out.println("Fitness: " + fitness + " | OM: " + getOpenMills() + ", CM: " + getClosedMills() +
-                ", Mvs: " + getMyMenVsOppMen() + ", ZM: " + getDoubleMills() + ", MA: " + getMovable());
+        //System.out.println("Fitness: " + fitness + " | OM: " + getOpenMills() + ", CM: " + getClosedMills() +
+        //        ", Mvs: " + getMyMenVsOppMen() + ", ZM: " + getDoubleMills() + ", MA: " + getMovable());
 
         return fitness;
     }
