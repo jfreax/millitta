@@ -2,6 +2,9 @@ package player.millitta;
 
 
 public interface Constants {
+
+    int TIME_PER_MOVE = 50000; // in ms
+
     /* Bit position */
     long BIT_PLAYER = 48;
     long BIT_PHASE = 49;
@@ -24,14 +27,25 @@ public interface Constants {
     int WEIGHT_MEN = 4;
     int WEIGHT_MOVABLE = 5;
 
-    static final double[] Weighting = {
-            1.0, // open mills
-            5.0, // closed mills
-            8.0, // Zwickmuehle
-            1.5, // Gabeln
-            1.2, // men
-            1.5, // movable
-            1.0  // Kreuzungen
+    static double[][] Weighting = {
+            {
+                    2.8805077475449576, // open mills
+                    2.7690945955253317, // closed mills
+                    18.19591255975574, // Zwickmuehle
+                    0.5192642916523981, // Gabeln
+                    14.558305542722866, // men
+                    0.6619799491171481, // movable
+                    6.242419112367337, // Kreuzungen
+            },
+            {
+                    2.8805077475449576, // open mills
+                    2.7690945955253317, // closed mills
+                    18.19591255975574, // Zwickmuehle
+                    0.5192642916523981, // Gabeln
+                    14.558305542722866, // men
+                    0.6619799491171481, // movable
+                    6.242419112367337, // Kreuzungen
+            }
     };
 
     /* Magics */
