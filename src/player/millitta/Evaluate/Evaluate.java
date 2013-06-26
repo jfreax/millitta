@@ -65,6 +65,7 @@ public class Evaluate extends Board {
                 ", Mvs: " + getMyMenVsOppMen() + ", ZM: " + getDoubleMills() + ", MA: " + getMovable());
 */
 
+
         return fitness;
     }
 

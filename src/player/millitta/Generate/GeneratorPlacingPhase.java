@@ -1,9 +1,8 @@
 package player.millitta.Generate;
 
 
-import player.millitta.Helper;
-
 public class GeneratorPlacingPhase extends AbstractGenerator {
+
 
     public GeneratorPlacingPhase(long board) {
         super(board);
@@ -22,7 +21,7 @@ public class GeneratorPlacingPhase extends AbstractGenerator {
         // Spielsteine beider Spieler zusammen.
         // Sagt aus welche Position frei und welche besetzt ist.
         long mergedBoardPoints = (board & BITS_MENS1) | ((board & BITS_MENS2) >> 24);
-        for (int i = 0; i < 24; i++) {
+        for (int i : idOrdner) {
             if ((mergedBoardPoints & (1L << i)) == 0) {
                 // Setze Figur auf Spielbrett
                 long nextBoard = setMyMan(i);

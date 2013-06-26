@@ -3,7 +3,9 @@ package player.millitta;
 
 public interface Constants {
 
-    int TIME_PER_MOVE = 50000; // in ms
+    int TIME_PER_MOVE = 5000; // in ms
+
+    int[] idOrdner = {7, 15, 23, 22, 21, 20, 16, 17, 18, 19, 11, 3, 6, 5, 4, 0, 12, 13, 1, 8, 2, 14, 9, 10};
 
     /* Bit position */
     long BIT_PLAYER = 48;
@@ -30,7 +32,7 @@ public interface Constants {
     static double[][] Weighting = {
             {
                     2.8805077475449576, // open mills
-                    2.7690945955253317, // closed mills
+                    9.7690945955253317, // closed mills
                     18.19591255975574, // Zwickmuehle
                     0.5192642916523981, // Gabeln
                     14.558305542722866, // men
@@ -39,7 +41,7 @@ public interface Constants {
             },
             {
                     2.8805077475449576, // open mills
-                    2.7690945955253317, // closed mills
+                    9.7690945955253317, // closed mills
                     18.19591255975574, // Zwickmuehle
                     0.5192642916523981, // Gabeln
                     14.558305542722866, // men

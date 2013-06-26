@@ -10,9 +10,7 @@ import player.millitta.Generate.Generator;
 import player.millitta.Helper;
 import player.millitta.Search.YouLostException;
 
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Random;
+import java.util.*;
 
 public class Millitta extends player.millitta.Millitta {
 
@@ -21,8 +19,27 @@ public class Millitta extends player.millitta.Millitta {
     public static void main(String[] args) {
         Random random = new Random();
 
-        // Populationsgroesse mind. 4
-        int populationSize = 4;
+        long board = 1212384742704414783L;
+
+        Helper.printBoardState(board);
+        Helper.printBoard(board);
+        //double fitness = (new Evaluate(board)).getFitness();
+
+        Millitta game = new Millitta();
+        try {
+                board = game.playWithoutEngine(board);
+        } catch (YouLostException e) {
+            System.out.println("I WILL LOSE! :(");
+        }
+
+        System.out.println(board);
+        Helper.printBoardState(board);
+        Helper.printBoard(board);
+
+
+
+/*        // Populationsgroesse mind. 4
+        int populationSize = 40;
         Population pop = new Population(populationSize);
 
         while (true) {
@@ -54,7 +71,7 @@ public class Millitta extends player.millitta.Millitta {
 
             // Alte + Mutationen + Kinder = neue Population
             pop.setIndividuals(bestSoFar);
-        }
+        }*/
 
 
 //        Millitta game = new Millitta();

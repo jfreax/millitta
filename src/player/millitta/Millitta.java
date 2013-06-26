@@ -50,7 +50,6 @@ public class Millitta extends Player implements Constants {
 
         // Debugging
         setMessage("Board: " + String.valueOf(board));
-        setMessage("Next board: " + nextBoard);
 
         // Make the move!
         long bitDiff = (board ^ nextBoard) & BITS_MENS;
@@ -141,7 +140,6 @@ public class Millitta extends Player implements Constants {
             board |= ((long)(countOppRest()) << BIT_REST2);
         }
 
-        setMessage("First board: " + board);
         return board;
     }
 }

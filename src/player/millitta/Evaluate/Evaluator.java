@@ -43,9 +43,6 @@ public class Evaluator implements Constants {
         AlphaBetaPruning ab = new AlphaBetaPruning(board, 32, Constants.TIME_PER_MOVE);
         long bestBoard = ab.getBestBoard();
 
-        //System.out.println("Best board: " + bestBoard);
-
-
         return bestBoard;
     }
 }
