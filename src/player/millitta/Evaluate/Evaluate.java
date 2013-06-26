@@ -118,7 +118,7 @@ public class Evaluate extends Board {
                     long boardWithoutOpenAndClosedMills = boardWithoutMills & ~(mill);
 
                     for( int neighbor : LookupTable.neighbors[holePos]) {
-                        if( (boardWithoutOpenAndClosedMills & (1L << neighbor)) == 0L) {
+                        if( (boardWithoutOpenAndClosedMills & (1L << neighbor)) != 0L) {
                             openMills++;
                             break;
                         }
