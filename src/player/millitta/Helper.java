@@ -93,6 +93,24 @@ public class Helper implements Constants {
         System.out.print(playerOnPos(board, 5));
         System.out.print(" --------- ");
         System.out.println(playerOnPos(board, 4));
+    }
+
+    static public void printBoardState(long board) {
+        System.out.println("Player: " + ((board << (1L << BIT_PLAYER)) != 0 ? 2 : 1));
+        System.out.print("Phase: ");
+
+        if ((board & ((1L << BIT_ACTION))) != 0L) {
+
+            if ((board & (1L << (BIT_ACTION + 1))) != 0L) { // Remove man
+                System.out.println("Remove man");
+
+            } else { // Set man
+                System.out.println("Set man");
+            }
+        } else { // move man
+            System.out.println("Move man");
+        }
 
     }
+
 }
