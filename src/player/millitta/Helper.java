@@ -96,20 +96,20 @@ public class Helper implements Constants {
     }
 
     static public void printBoardState(long board) {
-        System.out.println("Player: " + ((board << (1L << BIT_PLAYER)) != 0 ? 2 : 1));
+        System.out.print("Player: " + ((board & (1L << BIT_PLAYER)) != 0 ? 2 : 1) + " | ");
         System.out.print("Phase: ");
 
-        if ((board & ((1L << BIT_ACTION))) != 0L) {
-
-            if ((board & (1L << (BIT_ACTION + 1))) != 0L) { // Remove man
-                System.out.println("Remove man");
-
-            } else { // Set man
-                System.out.println("Set man");
-            }
-        } else { // move man
-            System.out.println("Move man");
+        if ((board & ((1L << BIT_ACTION))) != 0L && ((board & (1L << (BIT_ACTION + 1))) != 0L)) { // Remove
+            System.out.println("Remove ");
+        } else if ((board & (1L << BIT_PHASE)) != 0 && (board & (1L << (BIT_PHASE + 1))) != 0) { // Flugphase
+            System.out.println("Flying phase");
+        } else if ((board & (1L << BIT_PHASE)) != 0) { // Setzphase
+            System.out.println("Placing");
+        } else { // Zugphase
+            System.out.println("Moving");
         }
+
+
 
     }
 
